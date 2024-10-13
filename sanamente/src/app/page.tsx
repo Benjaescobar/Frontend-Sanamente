@@ -1,19 +1,28 @@
-// app/page.tsx
+"use client"
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowRight } from 'react-icons/fi';
-
+import { useState } from 'react';
+import useApi from '../hooks/useApi';
 
 export default function Home() {
+  const [fetchData, setFetchData] = useState(false); // Estado para controlar la solicitud de datos
+  const { data, loading, error } = useApi(fetchData); // Pasamos el estado como dependencia
+
+  // Función para activar la solicitud de datos
+  const handleFetchData = () => {
+    setFetchData(true); // Al presionar el botón, habilitamos la solicitud de la API
+  };
+
   return (
     <div>
       <NavBar /> {/* Barra de navegación */}
       <div className="flex justify-center items-center w-screen h-[80vh]">
         <div className="flex justify-between p-10 w-4/5">
           <div className="w-2/3">
-            <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Tu mat 💻</p>
-            <h1 className="text-4xl font-bold text-gray-800">
+            <p className="mx-4 border rounded-xl px-3 py-1 text-white bg-red-500 inline-flex">Tu match perfecto 🧩</p>
+            <h1 className="mx-4 mt-4 text-4xl font-bold text-gray-800">
               Tu bienestar es nuestro propósito: <br />
               Encuentra al profesional adecuado <span className="text-red-500">para ti.</span>
             </h1>
@@ -37,6 +46,26 @@ export default function Home() {
             />
           </div>
         </div>
+      </div>
+      <div className="flex justify-center items-center">
+      {/* Botón para hacer la solicitud a la API */}
+      {/* Botón para hacer la solicitud a la API */}
+      <button 
+              onClick={handleFetchData} 
+              className="inline-flex mt-4 rounded-xl px-3 py-1 text-white bg-green-500 hover:bg-green-600"
+            >
+              Obtener Datos de la API
+            </button>
+
+            {/* Mostrar el estado de carga, error o los datos */}
+            {loading && <p className="mt-4">Cargando datos...</p>}
+            {error && <p className="mt-4 text-red-500">{error.message}</p>}
+            {data && (
+              <div className="mt-4 bg-gray-100 p-4 rounded-xl">
+                <h3 className="font-bold">Datos obtenidos:</h3>
+                <pre className="text-sm">{JSON.stringify(data, null, 2)}</pre>
+              </div>
+            )}
       </div>
     </div>
   );
