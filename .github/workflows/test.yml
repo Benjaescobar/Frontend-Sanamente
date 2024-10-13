@@ -18,5 +18,5 @@ jobs:
         working-directory: sanamente
       - run: npm test
         working-directory: sanamente
-      - run: npm next build
+      - run: npm build
         working-directory: sanamente
