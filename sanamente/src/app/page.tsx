@@ -12,17 +12,18 @@ export default function Home() {
       <div className="flex justify-center items-center w-screen h-[80vh]">
         <div className="flex justify-between p-10 w-4/5">
           <div className="w-2/3">
+            <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Tu mat 💻</p>
             <h1 className="text-4xl font-bold text-gray-800">
               Tu bienestar es nuestro propósito: <br />
               Encuentra al profesional adecuado <span className="text-red-500">para ti.</span>
             </h1>
             <div className="mt-6 space-y-3">
-              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Agenda fácilmente </p>
-              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Selecciona tus necesidades</p>
-              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Precios a tu medida</p>
-              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Consultas a tu manera</p>
+              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Agenda fácilmente 🗓️</p>
+              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Selecciona tus necesidades 👤</p>
+              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Precios a tu medida 💰</p>
+              <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Consultas a tu manera 💻</p>
             </div>
-            <Link href="" className="inline-flex mt-10 border rounded-xl px-3 py-1 text-white bg-blue-400 hover:bg-blue-300">
+            <Link href="" className="inline-flex mt-10 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300">
               Regístrate
               <FiArrowRight className="m-1" /> {/* Icono de flecha */}
             </Link>
