@@ -15,5 +15,8 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+        working-directory: sanamente
       - run: npm test
+        working-directory: sanamente
       - run: npm next build
+        working-directory: sanamente
