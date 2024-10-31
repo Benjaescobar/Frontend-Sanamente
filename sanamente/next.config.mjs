@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+      domains: ['assets.pinterest.com', 'example.com', 'images.unsplash.com'], // Agrega todos los dominios necesarios
+    },
+};
 
 export default nextConfig;
