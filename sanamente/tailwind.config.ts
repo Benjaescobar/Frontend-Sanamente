@@ -9,6 +9,10 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    colors: {
+      celeste: '#e7f0ff',
+      amarillo: '#fef6df',
+    }
   },
   plugins: [
     // ...
