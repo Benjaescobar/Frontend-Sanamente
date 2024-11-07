@@ -2,7 +2,6 @@
 import NavBar from "@/components/navbar/NavBar";
 import Content from "@/components/profile/Content";
 import Review from "@/components/profile/Review";
-import InformacionAdicional from "@/components/profile/AdditionalInfo";
 import { useState } from "react";
 import React from "react";
 
@@ -16,8 +15,6 @@ export default function FeedPosts() {
       <div className="pt-10">
         <Content />
       </div>
-      {/* Componente de Información Adicional */}
-      <InformacionAdicional />
       {/* Componente de Review */}
       <Review />
     </div>

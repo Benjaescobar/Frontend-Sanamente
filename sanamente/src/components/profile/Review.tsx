@@ -2,7 +2,33 @@
 import React from "react";
 import Image from "next/image";
 
-function ReviewCard() {
+const reviews = [
+  {
+    username: "Juliana Rodríguez",
+    date: "2024-09-16",
+    rating: 4,
+    review:
+      "Ana María es una profesional empática y cercana, que brinda un espacio seguro para comprender y trabajar las emociones, ofreciendo herramientas prácticas para el bienestar diario.",
+  },
+  {
+    username: "Carlos Pérez",
+    date: "2024-08-10",
+    rating: 5,
+    review:
+      "Ana es una excelente profesional que siempre está dispuesto a escuchar y ofrecer soluciones prácticas.",
+  },
+  // Agrega más reseñas si es necesario
+];
+
+interface ReviewData {
+  username: string;
+  date: string;
+  rating: number;
+  review: string;
+}
+
+function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
+  const { username, date, rating, review } = reviewData;
   return (
     <div className="border border-gray-300 rounded-xl p-4 w-full max-w-md shadow-sm">
       <div className="flex items-start">
@@ -18,23 +44,31 @@ function ReviewCard() {
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">Nombre de usuario</p>
-              <p className="text-sm text-gray-500">16 de Septiembre del 2024</p>
+              <p className="font-semibold text-gray-800">{username}</p>
+              <p className="text-sm text-gray-500">
+                {new Date(date).toLocaleDateString("es-ES", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
             </div>
             <div className="flex items-center">
-              {/* Estrellas de calificación */}
-              <span className="text-yellow-400 text-lg">★</span>
-              <span className="text-yellow-400 text-lg">★</span>
-              <span className="text-yellow-400 text-lg">★</span>
-              <span className="text-yellow-400 text-lg">★</span>
-              <span className="text-gray-300 text-lg">★</span>
+              {Array.from({ length: 5 }, (_, i) => (
+                <span
+                  key={i}
+                  className={
+                    i < rating
+                      ? "text-yellow-400 text-lg"
+                      : "text-gray-300 text-lg"
+                  }
+                >
+                  ★
+                </span>
+              ))}
             </div>
           </div>
-          <p className="text-gray-700 mt-2">
-            Ana María es una profesional empática y cercana, que brinda un
-            espacio seguro para comprender y trabajar las emociones, ofreciendo
-            herramientas prácticas para el bienestar diario.
-          </p>
+          <p className="text-gray-700 mt-2">{review}</p>
         </div>
       </div>
     </div>
@@ -44,10 +78,9 @@ function ReviewCard() {
 export default function Review() {
   return (
     <div className="flex gap-2 mt-4 ml-20">
-      {" "}
-      {/* Margen de 20 al contenedor principal */}
-      <ReviewCard />
-      <ReviewCard />
+      {reviews.map((review, index) => (
+        <ReviewCard key={index} reviewData={review} />
+      ))}
     </div>
   );
 }
