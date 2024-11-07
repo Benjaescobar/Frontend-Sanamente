@@ -46,7 +46,7 @@ function Content({
   imageUrl,
 }: ContentProps) {
   return (
-    <div className="mb-4 w-full max-w-4xl ml-20">
+    <div className="mb-4 w-full max-w-4xl ml-10">
       <div className="flex">
         <Image
           src={imageUrl}
