@@ -3,12 +3,9 @@ import NavBar from "@/components/navbar/NavBar";
 import Header from "@/components/search/Header";
 import Filters from "@/components/search/Filters";
 import Feed from "@/components/search/Feed";
-import { useState } from "react";
-// pages/feed-posts.tsx
 import React from "react";
 
 export default function Search() {
-  const [fetchData, setFetchData] = useState(false); // Estado para controlar la solicitud de datos
 
   return (
     <div>

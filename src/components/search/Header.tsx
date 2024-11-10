@@ -16,10 +16,10 @@ export default function Header() {
   const [selectedComuna, setSelectedComuna] = useState('');
   const [filteredComunas, setFilteredComunas] = useState(comunas);
   const [isFocused, setIsFocused] = useState(false); // Estado para controlar el enfoque
-  const [date, setDate] = useState({ 
-        startDate: null, 
-        endDate: null
-    });
+  // const [date, setDate] = useState({ 
+  //       startDate: null, 
+  //       endDate: null
+  //   });
 
   const handleComunaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

@@ -8,8 +8,6 @@ import { useState } from "react";
 import React from "react";
 
 export default function FeedPosts() {
-  const [fetchData, setFetchData] = useState(false); // Estado para controlar la solicitud de datos
-
   return (
     <div>
       <NavBar />

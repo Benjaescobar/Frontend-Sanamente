@@ -26,7 +26,8 @@ const posts = [
 ];
 
 export default function BlogFeed() {
-  var colorClass: string[] = ["bg-celeste", "bg-amarillo"];
+
+  const colorClass : string[] = ["bg-celeste", "bg-amarillo"]
 
   return (
     <div className="min-w-3/4">
