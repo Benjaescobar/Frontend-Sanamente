@@ -77,7 +77,7 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
 
 export default function Review() {
   return (
-    <div className="flex gap-2 mt-4 ml-20">
+    <div className="flex gap-2 mt-4 ml-10">
       {reviews.map((review, index) => (
         <ReviewCard key={index} reviewData={review} />
       ))}
