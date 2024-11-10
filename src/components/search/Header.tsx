@@ -16,10 +16,10 @@ export default function Header() {
   const [selectedComuna, setSelectedComuna] = useState('');
   const [filteredComunas, setFilteredComunas] = useState(comunas);
   const [isFocused, setIsFocused] = useState(false); // Estado para controlar el enfoque
-  const [date, setDate] = useState({ 
-        startDate: null, 
-        endDate: null
-    });
+  // const [date, setDate] = useState({ 
+  //       startDate: null, 
+  //       endDate: null
+  //   });
 
   const handleComunaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -47,7 +47,7 @@ export default function Header() {
           placeholder="Ingresa un nombre"
           className="p-2 rounded-md border border-gray-300 focus:outline-none flex-grow"
         />
-        
+
         {/* Input de comuna con lista filtrada */}
         <div className="relative flex-grow">
           <input
@@ -59,6 +59,7 @@ export default function Header() {
             placeholder="Ingresa la comuna"
             className="p-2 rounded-md border border-gray-300 focus:outline-none w-full"
           />
+
           {/* Lista de sugerencias, visible solo cuando está enfocado y hay un valor */}
           {isFocused && filteredComunas.length > 0 && (
             <ul className="absolute bg-white border border-gray-300 rounded-md mt-1 w-full z-10">

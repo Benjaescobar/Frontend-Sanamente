@@ -3,17 +3,8 @@ import NavBar from "../components/navbar/NavBar";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowRight } from 'react-icons/fi';
-import { useState } from 'react';
-import useApi from '../hooks/useApi';
 
 export default function Home() {
-  const [fetchData, setFetchData] = useState(false); // Estado para controlar la solicitud de datos
-  const { data, loading, error } = useApi(fetchData); // Pasamos el estado como dependencia
-
-  // Función para activar la solicitud de datos
-  const handleFetchData = () => {
-    setFetchData(true); // Al presionar el botón, habilitamos la solicitud de la API
-  };
 
   return (
     <div>
@@ -32,7 +23,7 @@ export default function Home() {
               <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Precios a tu medida 💰</p>
               <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Consultas a tu manera 💻</p>
             </div>
-            <Link href="" className="inline-flex mt-10 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300">
+            <Link href="" className="inline-flex mt-10 ml-5 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300">
               Regístrate
               <FiArrowRight className="m-1" /> {/* Icono de flecha */}
             </Link>
@@ -48,24 +39,7 @@ export default function Home() {
         </div>
       </div>
       <div className="flex justify-center items-center">
-      {/* Botón para hacer la solicitud a la API */}
-      {/* Botón para hacer la solicitud a la API */}
-      <button 
-              onClick={handleFetchData} 
-              className="inline-flex mt-4 rounded-xl px-3 py-1 text-white bg-green-500 hover:bg-green-600"
-            >
-              Obtener Datos de la API
-            </button>
-
-            {/* Mostrar el estado de carga, error o los datos */}
-            {loading && <p className="mt-4">Cargando datos...</p>}
-            {error && <p className="mt-4 text-red-500">{error.message}</p>}
-            {data && (
-              <div className="mt-4 bg-gray-100 p-4 rounded-xl">
-                <h3 className="font-bold">Datos obtenidos:</h3>
-                <pre className="text-sm">{JSON.stringify(data, null, 2)}</pre>
-              </div>
-            )}
+     
       </div>
     </div>
   );
