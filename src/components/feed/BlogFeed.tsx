@@ -1,12 +1,8 @@
 // components/BlogFeed.tsx
-<<<<<<< HEAD
-import React from "react";
-import ProfessionalBlogPost from "./ProfessionalBlogPost";
-=======
-import React from 'react';
+
+import { React, useState } from 'react';
 import ProfessionalBlogPost from './ProfessionalBlogPost';
 import { InlineWidget } from 'react-calendly';
->>>>>>> 51ace79 (feat: load professional calendar on profile)
 
 const posts = [
   {
