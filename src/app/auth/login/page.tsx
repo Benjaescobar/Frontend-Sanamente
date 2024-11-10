@@ -23,8 +23,8 @@ export default function Login() {
       alert(`Inicio de sesión exitoso. Correo: ${email}`);
       setError(null);
 
-      // Redirigir a una página (en este caso, al calendario)
-      router.push('/sanamente/feed');
+      // Redirigir a una página (en este caso, al homepage)
+      router.push('/home');
     } catch (err) {
       console.error('Error al guardar en localStorage:', err);
       setError('Error al guardar en localStorage.');
