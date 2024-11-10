@@ -26,8 +26,8 @@ export default function ProfessionalBlogPost({
             <Image 
                 src={imageUrl} 
                 alt={name} 
-                width={70} // Puedes ajustar el ancho (en píxeles) según tus necesidades
-                height={70} // Puedes ajustar la altura (en píxeles) según tus necesidades
+                width={70}
+                height={70} 
                 className="rounded-full mr-4 object-cover"
                 />
             <div className='flex flex-col justify-center space-y-2'>

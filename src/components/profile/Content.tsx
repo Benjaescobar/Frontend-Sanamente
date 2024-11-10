@@ -1,6 +1,7 @@
 // components/ProfessionalCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import { InlineWidget } from 'react-calendly';
 
 const professionals = [
   {
@@ -20,6 +21,7 @@ const professionals = [
     method: "Orientación Psicoanalítica",
     experience: "10 años",
     imageUrl: "/images/foto.png",
+    calendlyUrl: "https://calendly.com/ana-maria" // URL de Calendly del psicólogo
   },
   // Agrega más profesionales si es necesario
 ];
@@ -33,6 +35,7 @@ interface ContentProps {
   method: string;
   experience: string;
   imageUrl: string;
+  calendlyUrl: string;
 }
 
 function Content({
@@ -44,25 +47,30 @@ function Content({
   method,
   experience,
   imageUrl,
+  calendlyUrl
 }: ContentProps) {
+  const [showCalendar, setShowCalendar] = useState(false); 
+
   return (
     <div className="mb-4 w-full max-w-4xl ml-10">
       <div className="flex">
-        <Image
-          src={imageUrl}
-          alt={name}
-          width={170} // Tamaño ajustado
-          height={120} // Tamaño ajustado
-          className="rounded-lg mr-6 object-cover"
-        />
-        <div>
+        <div className="w-1/3">
+          <Image
+            src={imageUrl}
+            alt={name}
+            width={170} 
+            height={120} 
+            className="rounded-lg mr-6 object-cover"
+          />
+        </div>
+        <div className="w-2/3">
           <h3 className="text-2xl font-bold">{name}</h3>
           <p className="text-gray-600 mt-2">{description}</p>
           <div className="flex flex-wrap mt-4">
             {specialties.map((specialty) => (
               <span
                 key={specialty}
-                className="text-sm border border-red-500 rounded-full px-3 py-1 mx-1 my-1 text-red-500 font-medium" // Ajuste del padding y aumento del border-radius
+                className="text-sm border border-red-500 rounded-full px-3 py-1 mx-1 my-1 text-red-500 font-medium"
               >
                 {specialty}
               </span>
@@ -85,12 +93,25 @@ function Content({
             </div>
 
             <div>
-              <p className="font-bold text-sm text-gray-800">
-                Años de experiencia
-              </p>
+              <p className="font-bold text-sm text-gray-800">Años de experiencia</p>
               <span className="font-normal text-gray-800">{experience}</span>
             </div>
           </div>
+
+          {/* Botón para alternar la visibilidad del calendario */}
+          <button
+            onClick={() => setShowCalendar(!showCalendar)}
+            className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700 mt-4"
+          >
+            {showCalendar ? 'Ocultar Calendario' : 'Ver Calendario y Reservar'}
+          </button>
+
+          {/* Si showCalendar es true, mostramos el widget de Calendly */}
+          {showCalendar && (
+            <div className="mt-8" style={{ height: '600px', width: '100%', overflow: 'auto' }}>
+              <InlineWidget url={calendlyUrl} />
+            </div>
+          )}
         </div>
       </div>
     </div>

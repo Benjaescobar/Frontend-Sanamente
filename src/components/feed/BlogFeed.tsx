@@ -1,6 +1,12 @@
 // components/BlogFeed.tsx
+<<<<<<< HEAD
 import React from "react";
 import ProfessionalBlogPost from "./ProfessionalBlogPost";
+=======
+import React from 'react';
+import ProfessionalBlogPost from './ProfessionalBlogPost';
+import { InlineWidget } from 'react-calendly';
+>>>>>>> 51ace79 (feat: load professional calendar on profile)
 
 const posts = [
   {
@@ -28,6 +34,7 @@ const posts = [
 export default function BlogFeed() {
 
   const colorClass : string[] = ["bg-celeste", "bg-amarillo"]
+  const [showCalendar, setShowCalendar] = useState(false);
 
   return (
     <div className="min-w-3/4">
