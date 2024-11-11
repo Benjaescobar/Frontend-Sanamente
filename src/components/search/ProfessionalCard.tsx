@@ -22,9 +22,10 @@ export default function ProfessionalCard({
   precio_min,
   experiencia,
   ubicacion,
-  url_calendly,
   foto,
 }: ProfessionalCardProps) {
+  
+
   return (
     <div className="p-8 mb-4 bg-white rounded-xl shadow-md border border-gray-200 w-full">
       <div className="flex">

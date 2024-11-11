@@ -1,8 +1,6 @@
 "use client"
 import NavBar from "@/components/navbar/NavBar";
 import Content from "@/components/profile/Content";
-import Review from "@/components/profile/Review";
-import BlogFeed from "@/components/feed/BlogFeed";
 import { InlineWidget } from "react-calendly";
 import { useEffect, useState } from "react";
 import React from "react";

@@ -46,7 +46,7 @@ export default function NavBar() {
           >
             Feed Posts
           </Link>
-          <Link
+          {/* <Link
             href="/grupos-apoyo"
             className={`px-3 py-1 text-gray-700 rounded-md  ${
               isActive("/grupos-apoyo")
@@ -55,7 +55,7 @@ export default function NavBar() {
             }`}
           >
             Grupos de apoyo
-          </Link>
+          </Link> */}
         </div>
       )}
 

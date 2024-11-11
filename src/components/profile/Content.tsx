@@ -8,9 +8,7 @@ interface ContentProps {
   descripcion: string;
   especialidades: string;
   precio_min: number;
-  modalidad: string;
-  metodo: string;
-  experiencia: string;
+  experiencia: number;
   foto: string | null;
 }
 
@@ -19,8 +17,6 @@ function Content( {
   descripcion,
   especialidades,
   precio_min,
-  modalidad,
-  metodo,
   experiencia,
   foto,
 }: ContentProps) {

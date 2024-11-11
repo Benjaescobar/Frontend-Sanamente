@@ -31,15 +31,21 @@ export interface BlogPost {
 }
 
 export interface Therapist {
-  nombre: string;
-  descripcion: string;
-  especialidades: string;
-  precio_min: number;
-  modalidad: string;
-  metodo: string;
-  experiencia: string;
-  foto: string | null;
+  id: number;
+  usuario_id: number;
   url_calendly: string;
+  especialidades: string;
+  experiencia: number;
+  descripcion: string;
+  ubicacion: string;
+  precio_min: number;
+  precio_max: number;
+  createdAt: string;
+  nombre: string;
+  email: string;
+  foto: string | null;
+  modalidad?: string;
+  metodo?: string;
 }
 
 export interface TherapistData {
