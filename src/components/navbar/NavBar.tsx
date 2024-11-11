@@ -24,7 +24,7 @@ export default function NavBar() {
       {/* Sección izquierda: Mostrar cuando el usuario esté logueado */}
       {isLoggedIn && (
         <div className="flex items-center space-x-4">
-          <Link href="/" className="text-xl font-bold text-[#213554]">
+          <Link href="/home" className="text-xl font-bold text-[#213554]">
             <span className="text-[#213554]">SANA </span>
             <span className="text-red-500">MENTE</span>
           </Link>
