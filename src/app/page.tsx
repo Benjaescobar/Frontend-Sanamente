@@ -23,7 +23,7 @@ export default function Home() {
               <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Precios a tu medida 💰</p>
               <p className="border border-red-500 rounded-xl mx-3 p-2 py-2 text-red-500 inline-flex">Consultas a tu manera 💻</p>
             </div>
-            <Link href="" className="inline-flex mt-10 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300">
+            <Link href="" className="inline-flex mt-10 ml-5 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300">
               Regístrate
               <FiArrowRight className="m-1" /> {/* Icono de flecha */}
             </Link>

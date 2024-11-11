@@ -2,33 +2,15 @@
 import React from "react";
 import Image from "next/image";
 
-const reviews = [
-  {
-    username: "Juliana Rodríguez",
-    date: "2024-09-16",
-    rating: 4,
-    review:
-      "Ana María es una profesional empática y cercana, que brinda un espacio seguro para comprender y trabajar las emociones, ofreciendo herramientas prácticas para el bienestar diario.",
-  },
-  {
-    username: "Carlos Pérez",
-    date: "2024-08-10",
-    rating: 5,
-    review:
-      "Ana es una excelente profesional que siempre está dispuesto a escuchar y ofrecer soluciones prácticas.",
-  },
-  // Agrega más reseñas si es necesario
-];
-
 interface ReviewData {
-  username: string;
-  date: string;
-  rating: number;
-  review: string;
+  autor_nombre: string;
+  createdAt: string;
+  puntuacion: number;
+  comentario: string;
 }
 
 function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
-  const { username, date, rating, review } = reviewData;
+  const { autor_nombre, createdAt, puntuacion, comentario } = reviewData;
   return (
     <div className="border border-gray-300 rounded-xl p-4 w-full max-w-md shadow-sm">
       <div className="flex items-start">
@@ -44,9 +26,9 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">{username}</p>
+              <p className="font-semibold text-gray-800">{autor_nombre}</p>
               <p className="text-sm text-gray-500">
-                {new Date(date).toLocaleDateString("es-ES", {
+                {new Date(createdAt).toLocaleDateString("es-ES", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",
@@ -58,7 +40,7 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
                 <span
                   key={i}
                   className={
-                    i < rating
+                    i < puntuacion
                       ? "text-yellow-400 text-lg"
                       : "text-gray-300 text-lg"
                   }
@@ -68,19 +50,20 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
               ))}
             </div>
           </div>
-          <p className="text-gray-700 mt-2">{review}</p>
+          <p className="text-gray-700 mt-2">{comentario}</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function Review() {
-  return (
-    <div className="flex gap-2 mt-4 ml-20">
-      {reviews.map((review, index) => (
-        <ReviewCard key={index} reviewData={review} />
-      ))}
-    </div>
-  );
-}
+// export default function Review() {
+//   return (
+//     <div className="flex gap-2 mt-4 ml-10">
+//       {reviews.map((review, index) => (
+//         <ReviewCard key={index} reviewData={review} />
+//       ))}
+//     </div>
+//   );
+// }
+export default ReviewCard;

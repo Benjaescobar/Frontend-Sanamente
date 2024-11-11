@@ -2,67 +2,43 @@
 import { Disclosure } from '@headlessui/react'
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
-
 const filters = [
   {
-    id: 'color',
-    name: 'Color',
+    id: 'especialidad',
+    name: 'Áreas de especialidad',
     options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
+      { value: 'ansiedad', label: 'Ansiedad', checked: false },
+      { value: 'apego', label: 'Apego', checked: false },
+      { value: 'depresion', label: 'Depresión', checked: true },
+      { value: 'ira', label: 'Manejor de la ira', checked: false },
+      { value: 'fobias', label: 'Fobias', checked: false },
+      { value: 'relacionestoxicas', label: 'Relaciones tóxicas', checked: false },
     ],
   },
   {
-    id: 'category',
-    name: 'Category',
+    id: 'modalidad',
+    name: 'Modalidad',
     options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
+      { value: 'presencial', label: 'Presencial', checked: false },
+      { value: 'online', label: 'Online', checked: false },
     ],
   },
   {
-    id: 'size',
-    name: 'Size',
+    id: 'experiencia',
+    name: 'Años de experiencia',
     options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
+      { value: '10', label: '10 Años', checked: false },
+      { value: '5', label: '5 Años', checked: false },
+      { value: '2', label: '3 Años', checked: false },
+      { value: '1', label: '1 Año', checked: false },
     ],
   },
 ]
-
-// function classNames(...classes: any[]) {
-//   return classes.filter(Boolean).join(' ')
-// }
 
 export default function Filters() {
   return (
     <form className="hidden lg:block">
       <h3 className="sr-only">Categories</h3>
-      <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-        {subCategories.map((category) => (
-          <li key={category.name}>
-            <a href={category.href}>{category.name}</a>
-          </li>
-        ))}
-      </ul>
 
       {filters.map((section) => (
         <Disclosure key={section.id} as="div" className="border-b border-gray-200 py-6">
