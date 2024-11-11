@@ -1,8 +1,9 @@
 // src/services/apiService.ts
 import axios from 'axios';
 
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://backend-sanamente-d7ej.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,3 +19,23 @@ export const getHelloWorld = async () => {
     throw error;
   }
 };
+
+export const getAllTherapist = async () => {
+  try {
+    const response = await api.get(`/psicologos`);
+
+    console.log(response);
+    
+    return response.data.map((item: any) => ({
+      ...item,
+      nombre: item.usuario.nombre,
+      email: item.usuario.email,
+      foto: item.usuario.foto,
+    }));
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+
