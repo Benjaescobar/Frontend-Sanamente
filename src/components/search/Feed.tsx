@@ -4,7 +4,17 @@ import ProfessionalCard from './ProfessionalCard';
 import { getAllTherapist } from '@/services/apiService';
 import { Professional } from '../../types/types';
 
-export default function Feed() {
+interface FeedProps {
+  filters: {
+    esp: string;
+    exp: number;
+    city: string;
+    min_price: number;
+    max_price: number;
+  };
+}
+
+export default function Feed( { filters }: FeedProps) {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
 
   useEffect(() => {

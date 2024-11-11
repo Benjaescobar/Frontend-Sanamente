@@ -61,3 +61,5 @@ export interface ProfessionalBlogPostProps {
   imageUrl: string;
   color?: string;
 }
+
+

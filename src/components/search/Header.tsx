@@ -9,7 +9,6 @@ const comunas = [
   "La Reina",
   "Macul",
   "Lo Barnechea",
-  // Agrega más comunas según sea necesario
 ];
 
 export default function Header() {

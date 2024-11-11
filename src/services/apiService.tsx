@@ -10,6 +10,33 @@ const api = axios.create({
 });
 
 
+export const getFilteredTherapist = async ( esp: string, exp: number, city: string, min_price: number, max_price: number): Promise<Therapist[]> => {
+  try {
+    const response = await api.get(`/search/${esp}/${exp}/${city}/${min_price}/${max_price}`);
+    return response.data.map((item: any): Therapist => ({
+      id: item.usuario_id,
+      usuario_id: item.usuario_id,
+      url_calendly: item.url_calendly,
+      especialidades: item.especialidades,
+      experiencia: item.experiencia,
+      descripcion: item.descripcion,
+      ubicacion: item.ubicacion,
+      precio_min: item.precio_min,
+      precio_max: item.precio_max,
+      createdAt: item.createdAt,
+      nombre: item.usuario.nombre,
+      email: item.usuario.email,
+      foto: item.usuario.foto,
+      modalidad: item.modalidad || "Presencial",
+      metodo: item.metodo || "Orientación Psicoanalítica",
+    }));
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+
 export const getAllTherapist = async (): Promise<Therapist[]> => {
   try {
     const response = await api.get(`/psicologos`);
@@ -36,6 +63,8 @@ export const getAllTherapist = async (): Promise<Therapist[]> => {
   }
 };
 
+
+
 export const getPosts = async (): Promise<Post[]> => {
   const response = await api.get(`publicaciones/`);
   return response.data.map((post: any): Post => ({
@@ -45,6 +74,7 @@ export const getPosts = async (): Promise<Post[]> => {
     imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
   }));
 };
+
 
 export const getTherapistById = async (id: string): Promise<TherapistData> => {
   try {

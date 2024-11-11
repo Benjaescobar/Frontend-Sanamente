@@ -16,14 +16,6 @@ const filters = [
     ],
   },
   {
-    id: 'modalidad',
-    name: 'Modalidad',
-    options: [
-      { value: 'presencial', label: 'Presencial', checked: false },
-      { value: 'online', label: 'Online', checked: false },
-    ],
-  },
-  {
     id: 'experiencia',
     name: 'Años de experiencia',
     options: [
@@ -35,7 +27,28 @@ const filters = [
   },
 ]
 
+interface Filters {
+  esp: string;
+  exp: number;
+  city: string;
+  min_price: number;
+  max_price: number;
+}
+
+interface FiltersProps {
+  onFiltersChange: (newFilters: Partial<{ esp: string; exp: number }>) => void;
+}
+
 export default function Filters() {
+  
+  const handleEspChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onFiltersChange({ esp: event.target.value });
+  };
+
+  const handleExpChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onFiltersChange({ exp: Number(event.target.value) });
+  };
+
   return (
     <form className="hidden lg:block">
       <h3 className="sr-only">Categories</h3>
@@ -60,6 +73,7 @@ export default function Filters() {
                     name={`${section.id}[]`}
                     defaultValue={option.value}
                     defaultChecked={option.checked}
+                    onChange={section.id === 'especialidad'? handleEspChange : handleExpChange}
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
@@ -75,3 +89,7 @@ export default function Filters() {
     </form>
   )
 }
+function onFiltersChange(arg0: { esp: string; }) {
+  throw new Error('Function not implemented.');
+}
+
