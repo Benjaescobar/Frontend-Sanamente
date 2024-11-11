@@ -1,7 +1,8 @@
 // src/UserProfile.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from "@/components/navbar/NavBar";
 import '../../app/UserProfile.css';
+import { FaEdit, FaSave } from 'react-icons/fa';
 
 interface PersonalInfo {
   age: number;
@@ -25,7 +26,7 @@ interface User {
 }
 
 const UserProfile: React.FC = () => {
-  const user: User = {
+  const initialUser: User = {
     name: 'Juan',
     profilePicture: 'https://via.placeholder.com/150',
     personalInfo: {
@@ -58,32 +59,114 @@ const UserProfile: React.FC = () => {
     ],
   };
 
+  const [user, setUser] = useState<User>(initialUser);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableUser, setEditableUser] = useState<User>(initialUser);
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+    setEditableUser(user); // Restaura la información actual al iniciar la edición
+  };
+
+  const handleSave = () => {
+    setUser(editableUser); // Actualiza el usuario con la información editada
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditableUser((prevUser) => ({
+      ...prevUser,
+      personalInfo: {
+        ...prevUser.personalInfo,
+        [name]: name === 'age' ? Number(value) : value, // Convierte edad a número
+      },
+      name: name === 'name' ? value : prevUser.name, // Actualiza nombre si es el campo de nombre
+    }));
+  };
+
   return (
     <div>
       <NavBar />
-    
-    <div className="profile-container">
-      <header className="profile-header">
-        <img src={user.profilePicture} alt="Profile" className="profile-picture" />
-        <div className="profile-info">
-          <h2>{user.name}</h2>
-          <p>Edad: {user.personalInfo.age}</p>
-          <p>Email: {user.personalInfo.email}</p>
-          <p>Especialidad: {user.personalInfo.specialty}</p>
-        </div>
-      </header>
-      <section className="appointments">
-        <h3>Mis Citas</h3>
-        {user.appointments.map((appointment) => (
-          <div key={appointment.id} className="appointment-card">
-            <p><strong>Psicólogo:</strong> {appointment.psychologist}</p>
-            <p><strong>Fecha:</strong> {appointment.date}</p>
-            <p><strong>Reseña:</strong> {appointment.review}</p>
-            <p><strong>Calificación:</strong> {'⭐'.repeat(appointment.rating)}</p>
+      <div className="profile-container">
+        <header className="profile-header">
+          <img src={user.profilePicture} alt="Profile" className="profile-picture" />
+          <div className="profile-info">
+            {isEditing ? (
+              <input
+                type="text"
+                name="name"
+                value={editableUser.name}
+                onChange={handleInputChange}
+                className="editable-input"
+              />
+            ) : (
+              <h2>{user.name}</h2>
+            )}
+            {isEditing ? (
+              <button onClick={handleSave} className="save-button">
+                <FaSave /> Guardar
+              </button>
+            ) : (
+              <button onClick={handleEditToggle} className="edit-button">
+                <FaEdit /> Editar perfil
+              </button>
+            )}
+            <div>
+              <p>
+                Edad: {isEditing ? (
+                  <input
+                    type="number"
+                    name="age"
+                    value={editableUser.personalInfo.age}
+                    onChange={handleInputChange}
+                    className="editable-input"
+                  />
+                ) : (
+                  user.personalInfo.age
+                )}
+              </p>
+              <p>
+                Email: {isEditing ? (
+                  <input
+                    type="email"
+                    name="email"
+                    value={editableUser.personalInfo.email}
+                    onChange={handleInputChange}
+                    className="editable-input"
+                  />
+                ) : (
+                  user.personalInfo.email
+                )}
+              </p>
+              <p>
+                Especialidad: {isEditing ? (
+                  <input
+                    type="text"
+                    name="specialty"
+                    value={editableUser.personalInfo.specialty}
+                    onChange={handleInputChange}
+                    className="editable-input"
+                  />
+                ) : (
+                  user.personalInfo.specialty
+                )}
+              </p>
+            </div>
           </div>
-        ))}
-      </section>
-    </div>
+        </header>
+        <section className="appointments">
+          <h3>Mis Citas</h3>
+          {user.appointments.map((appointment) => (
+            <div key={appointment.id} className="appointment-card">
+              <p><strong>Psicólogo:</strong> {appointment.psychologist}</p>
+              <p><strong>Fecha:</strong> {appointment.date}</p>
+              <p><strong>Reseña:</strong> {appointment.review}</p>
+              <p><strong>Calificación:</strong> {'⭐'.repeat(appointment.rating)}</p>
+            </div>
+          ))}
+        </section>
+      </div>
     </div>
   );
 };

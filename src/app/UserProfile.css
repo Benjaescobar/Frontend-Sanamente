@@ -52,3 +52,29 @@
     color: #333;
   }
   
+  /* src/app/UserProfile.css */
+
+.edit-button, .save-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .edit-button:hover, .save-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .editable-input {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
