@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 
 interface ProfessionalCardProps {
+  id: number;
   nombre: string;
   descripcion: string;
   especialidades: string;
@@ -14,6 +15,7 @@ interface ProfessionalCardProps {
 }
 
 export default function ProfessionalCard({
+  id,
   nombre,
   descripcion,
   especialidades,
@@ -27,7 +29,7 @@ export default function ProfessionalCard({
     <div className="p-8 mb-4 bg-white rounded-xl shadow-md border border-gray-200 w-full">
       <div className="flex">
         <Image
-          src={foto || '/images/sergio.png'} // Imagen por defecto si `foto` es null
+          src={foto || '/images/default-profile.jpg'} // Imagen por defecto si `foto` es null
           alt={nombre}
           width={96} // Puedes ajustar el ancho según tus necesidades
           height={96} // Puedes ajustar la altura según tus necesidades
@@ -72,7 +74,7 @@ export default function ProfessionalCard({
           </div>
         </div>
         {/* Botón alineado debajo */}
-        <a href={url_calendly} target="_blank" rel="noopener noreferrer">
+        <a href={`/profile/${id}`} target="_blank" rel="noopener noreferrer">
           <button className="bg-red-500 text-white w-full py-2 rounded-2xl text-center text-m font-light">
             Reserva ahora con {nombre.split(' ')[0]}
           </button>
