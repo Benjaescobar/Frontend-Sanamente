@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function NavBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated } = useAuth0();
   const pathname = usePathname(); // Obtener la ruta actual
+  const router = useRouter();
+  const [authStatus, setAuthStatus] = useState(isAuthenticated);
 
   useEffect(() => {
-    // Verifica si existe un email en localStorage
-    const email = localStorage.getItem("email");
-    if (email) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+    setAuthStatus(isAuthenticated); // Actualiza el estado cada vez que isAuthenticated cambie
+  }, [isAuthenticated]);
 
   // Función para determinar si una ruta está activa
-  const isActive = (route: string) => pathname === route;
+  const isActive = (route) => pathname === route;
 
   return (
     <nav className="flex justify-between p-5 bg-[#E7F0FF] items-center">
-      {/* Sección izquierda: Mostrar cuando el usuario esté logueado */}
-      {isLoggedIn && (
+      {/* Sección izquierda: Mostrar cuando el usuario esté autenticado */}
+      {authStatus && (
         <div className="flex items-center space-x-4">
           <Link href="/home" className="text-xl font-bold text-[#213554]">
             <span className="text-[#213554]">SANA </span>
@@ -30,10 +29,8 @@ export default function NavBar() {
           </Link>
           <Link
             href="/search"
-            className={`px-3 py-1 text-gray-700 rounded-md  ${
-              isActive("/search")
-                ? "bg-red-500 text-white hover:bg-red-400"
-                : ""
+            className={`px-3 py-1 text-gray-700 rounded-md ${
+              isActive("/search") ? "bg-red-500 text-white hover:bg-red-400" : ""
             }`}
           >
             Buscar profesional
@@ -48,10 +45,8 @@ export default function NavBar() {
           </Link>
           {/* <Link
             href="/grupos-apoyo"
-            className={`px-3 py-1 text-gray-700 rounded-md  ${
-              isActive("/grupos-apoyo")
-                ? "bg-red-500 text-white hover:bg-red-400"
-                : ""
+            className={`px-3 py-1 text-gray-700 rounded-md ${
+              isActive("/grupos-apoyo") ? "bg-red-500 text-white hover:bg-red-400" : ""
             }`}
           >
             Grupos de apoyo
@@ -64,7 +59,7 @@ export default function NavBar() {
         <Link href="" className="mx-4 rounded-xl px-3 py-1 text-gray-700">
           Contacto
         </Link>
-        {isLoggedIn ? (
+        {authStatus ? (
           <Link href="/profile" className="mx-4 flex items-center space-x-2">
             {/* Ícono de perfil */}
             <FontAwesomeIcon

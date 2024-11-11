@@ -20,7 +20,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           domain={domain}
           clientId={clientId}
           authorizationParams={{
-            redirect_uri: typeof window !== "undefined" ? window.location.origin : "http://localhost:3000/profile",
+            redirect_uri: typeof window !== "undefined" ? window.location.origin : "http://localhost:3000/home",
           }}
         >
           <main>{children}</main> {/* Aquí irá el contenido de cada página */}
