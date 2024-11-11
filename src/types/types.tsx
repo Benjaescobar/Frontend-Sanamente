@@ -13,3 +13,45 @@ export interface Professional {
     email: string;
     foto: string | null;
   }
+
+export interface Review {
+  id: number;
+  autor_id: number;
+  evaluado_id: number;
+  puntuacion: number;
+  comentario: string;
+  createdAt: string;
+  autor_nombre: string;
+  autor_foto: string | null;
+}
+
+export interface BlogPost {
+  contenido: string;
+  createdAt: string;
+}
+
+export interface Therapist {
+  nombre: string;
+  descripcion: string;
+  especialidades: string;
+  precio_min: number;
+  modalidad: string;
+  metodo: string;
+  experiencia: string;
+  foto: string | null;
+  url_calendly: string;
+}
+
+export interface TherapistData {
+  therapist: Therapist;
+  valoraciones_recibidas: Review[];
+  publicaciones: BlogPost[];
+}
+
+export interface ProfessionalBlogPostProps {
+  contenido: string;
+  createdAt: string;
+  nombre: string;
+  imageUrl: string;
+  color?: string;
+}

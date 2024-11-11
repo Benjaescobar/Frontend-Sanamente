@@ -25,13 +25,13 @@ const posts = [
   },
 ];
 
-export default function BlogFeed() {
+export default function BlogFeed( publicaciones: any[] ) {
 
   const colorClass : string[] = ["bg-celeste", "bg-amarillo"]
 
   return (
     <div className="min-w-3/4">
-      {posts.map((post, index) => (
+      {publicaciones.map((post, index) => (
         <ProfessionalBlogPost
           key={index}
           color={colorClass[index % 2]}
