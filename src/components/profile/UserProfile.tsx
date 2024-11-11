@@ -1,5 +1,6 @@
 // src/UserProfile.tsx
 import React from 'react';
+import NavBar from "@/components/navbar/NavBar";
 import '../../app/UserProfile.css';
 
 interface PersonalInfo {
@@ -58,6 +59,9 @@ const UserProfile: React.FC = () => {
   };
 
   return (
+    <div>
+      <NavBar />
+    
     <div className="profile-container">
       <header className="profile-header">
         <img src={user.profilePicture} alt="Profile" className="profile-picture" />
@@ -79,6 +83,7 @@ const UserProfile: React.FC = () => {
           </div>
         ))}
       </section>
+    </div>
     </div>
   );
 };
