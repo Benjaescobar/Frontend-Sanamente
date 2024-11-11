@@ -9,7 +9,7 @@ export default function Login() {
   useEffect(() => {
     if (isAuthenticated) {
       // Cambia la ruta según tu preferencia, por ejemplo, a '/sanamente/feed'
-      window.location.replace("/sanamente/feed");
+      window.location.replace("/home");
     }
   }, [isAuthenticated]);
 
