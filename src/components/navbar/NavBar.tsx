@@ -18,6 +18,12 @@ export default function NavBar() {
   // Función para determinar si una ruta está activa
   const isActive = (route) => pathname === route;
 
+  // Función de manejo para redirigir a /my-profile
+  const handleProfileClick = (e) => {
+    e.preventDefault(); // Evita el comportamiento predeterminado del enlace
+    router.push("/my-profile"); // Redirige a la nueva ruta
+  };
+
   return (
     <nav className="flex justify-between p-5 bg-[#E7F0FF] items-center">
       {/* Sección izquierda: Mostrar cuando el usuario esté autenticado */}
@@ -60,7 +66,11 @@ export default function NavBar() {
           Contacto
         </Link>
         {authStatus ? (
-          <Link href="/profile" className="mx-4 flex items-center space-x-2">
+          <a
+            href="my-profile"
+            onClick={handleProfileClick} // Llama a la función de redirección
+            className="mx-4 flex items-center space-x-2"
+          >
             {/* Ícono de perfil */}
             <FontAwesomeIcon
               icon={faUser}
@@ -68,7 +78,7 @@ export default function NavBar() {
               className="text-gray-700"
             />
             <span className="text-gray-700">Perfil</span>
-          </Link>
+          </a>
         ) : (
           <>
             <Link
