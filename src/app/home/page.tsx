@@ -68,12 +68,12 @@ export default function HomePage() {
         </div>
         <div>
           <div className="text-lg mb-6">¿Por qué escogernos a nosotros?</div>
-          <div className="flex justify-center space-x-10">
-            <Reasons title="Nos adaptamos a tu bolsillo 💰" />
-            <Reasons title="Escoges a quien más te acomode 🙋🏼" />
-            <Reasons title="Agendas de manera rápida y cómoda 📕" />
-            <Reasons title="Chateas con quien quieras 💬" />
-          </div>
+            <div className="flex justify-center space-x-10">
+              <Reasons title="Nos adaptamos a tu bolsillo 💰" />
+              <Reasons title="Escoges a quien más te acomode 🙋🏼" />
+              <Reasons title="Agendas de manera rápida y cómoda 📕" />
+              <Reasons title="Chateas con quien quieras 💬" />
+            </div>
         </div>
       </div>
     </>
