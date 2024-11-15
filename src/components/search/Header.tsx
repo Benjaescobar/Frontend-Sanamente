@@ -16,16 +16,11 @@ export default function Header() {
   const [selectedComuna, setSelectedComuna] = useState('');
   const [filteredComunas, setFilteredComunas] = useState(comunas);
   const [isFocused, setIsFocused] = useState(false); // Estado para controlar el enfoque
-  // const [date, setDate] = useState({ 
-  //       startDate: null, 
-  //       endDate: null
-  //   });
 
   const handleComunaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSelectedComuna(value);
 
-    // Filtrar las comunas en base al valor del input
     const filtered = comunas.filter((comuna) =>
       comuna.toLowerCase().includes(value.toLowerCase())
     );
@@ -34,8 +29,8 @@ export default function Header() {
 
   const handleComunaSelect = (comuna: string) => {
     setSelectedComuna(comuna);
-    setFilteredComunas([]); // Cierra la lista de sugerencias
-    setIsFocused(false); // Cierra la lista al seleccionar
+    setFilteredComunas([]);
+    setIsFocused(false);
   };
 
   return (
