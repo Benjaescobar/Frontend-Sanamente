@@ -25,7 +25,6 @@ export default function PsychologistProfile() {
   
       try {
         const data = await getTherapistById(id);
-        console.log(data);
         setTherapistData(data);
       } catch (error) {
         console.error("Error fetching Therapist:", error);
