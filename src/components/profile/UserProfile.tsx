@@ -1,5 +1,6 @@
 // src/UserProfile.tsx
 import React, { useState } from 'react';
+import Image from 'next/image';
 import NavBar from "@/components/navbar/NavBar";
 import '../../app/UserProfile.css';
 import { FaEdit, FaSave } from 'react-icons/fa';
@@ -90,7 +91,7 @@ const UserProfile: React.FC = () => {
       <NavBar />
       <div className="profile-container">
         <header className="profile-header">
-          <img src={user.profilePicture} alt="Profile" className="profile-picture" />
+          <Image src={user.profilePicture} alt="Profile" className="profile-picture" />
           <div className="profile-info">
             {isEditing ? (
               <input

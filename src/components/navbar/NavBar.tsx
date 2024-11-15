@@ -16,10 +16,10 @@ export default function NavBar() {
   }, [isAuthenticated]);
 
   // Función para determinar si una ruta está activa
-  const isActive = (route) => pathname === route;
+  const isActive = (route: string) => pathname === route;
 
   // Función de manejo para redirigir a /my-profile
-  const handleProfileClick = (e) => {
+  const handleProfileClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault(); // Evita el comportamiento predeterminado del enlace
     router.push("/my-profile"); // Redirige a la nueva ruta
   };
