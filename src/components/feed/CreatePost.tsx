@@ -1,5 +1,6 @@
 // components/CreatePost.tsx
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function CreatePost() {
   const [postContent, setPostContent] = useState("");
@@ -21,7 +22,7 @@ export default function CreatePost() {
   return (
     <div className="flex flex-col justify-around space-y-2 px-6 py-3 pb-4 m-4 rounded-xl border bg-white mx-auto">
       <div className="flex items-center mb-4">
-        <img
+        <Image
           src="/images/tu-foto-de-perfil.png" // Cambia esta ruta a la imagen de perfil real
           alt="Foto de perfil"
           className="w-10 h-10 rounded-full mr-3"
