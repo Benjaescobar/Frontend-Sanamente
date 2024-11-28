@@ -9,7 +9,7 @@ export default function Login() {
     const saveUser = async () => {
       if (isAuthenticated && user) {
         try {
-          const response = await fetch("/api/users", {
+          const response = await fetch("https://backend-sanamente-d7ej.onrender.com/usuarios/crear", {
             method: "POST",
             headers: {
               "Content-Type": "application/json" 
