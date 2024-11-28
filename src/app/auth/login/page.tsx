@@ -3,15 +3,35 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 
 export default function Login() {
-  const { loginWithRedirect, isAuthenticated, error } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, user, getIdTokenClaims, error } = useAuth0();
 
-  // Redirige al usuario si ya está autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      // Cambia la ruta según tu preferencia, por ejemplo, a '/sanamente/feed'
-      window.location.replace("/home");
-    }
-  }, [isAuthenticated]);
+    const saveUser = async () => {
+      if (isAuthenticated && user) {
+        try {
+          const response = await fetch("/api/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({
+              auth0Id: user.sub, // ID único de Auth0
+              name: user.name,
+              email: user.email,
+            }),
+          });
+
+          if (!response.ok) {
+            console.error("Error al guardar el usuario en el backend:", await response.text());
+          }
+        } catch (error) {
+          console.error("Error durante el guardado del usuario:", error);
+        }
+      }
+    };
+
+    saveUser();
+  }, [isAuthenticated, user, getIdTokenClaims]);
 
   const handleLogin = async () => {
     try {
