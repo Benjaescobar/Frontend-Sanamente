@@ -1,28 +1,67 @@
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function NavBar() {
-  const { isAuthenticated } = useAuth0();
+  const { logout, isAuthenticated, user } = useAuth0();
+
   const pathname = usePathname(); // Obtener la ruta actual
-  const router = useRouter();
   const [authStatus, setAuthStatus] = useState(isAuthenticated);
+
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null); // Usamos un ref para identificar el dropdown
+
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    logout();
+  }
 
   useEffect(() => {
     setAuthStatus(isAuthenticated); // Actualiza el estado cada vez que isAuthenticated cambie
+    if (user) {
+      // Usa valores predeterminados si alguna propiedad es undefined
+      localStorage.setItem('email', user.email || '');
+      localStorage.setItem('name', user.name || '');
+      localStorage.setItem('sub', user.sub || '');
+      localStorage.setItem('picture', user.picture || '');
+    }
+    if(localStorage.getItem('email')){
+      const picture = localStorage.getItem("picture");
+      if (picture) {
+        setProfilePicture(picture); // Establece la imagen si existe
+      }
+      setAuthStatus(true);
+    }else{
+      setAuthStatus(false);
+    }
   }, [isAuthenticated]);
 
   // Función para determinar si una ruta está activa
   const isActive = (route: string) => pathname === route;
 
-  // Función de manejo para redirigir a /my-profile
-  const handleProfileClick = (e: { preventDefault: () => void; }) => {
-    e.preventDefault(); // Evita el comportamiento predeterminado del enlace
-    router.push("/my-profile"); // Redirige a la nueva ruta
+  const handleOutsideClick = (event: { target: any; }) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false); // Cierra el dropdown si el clic ocurre fuera de él
+    }
   };
+
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
 
   return (
     <nav className="flex justify-between p-5 bg-[#E7F0FF] items-center">
@@ -66,20 +105,54 @@ export default function NavBar() {
           Contacto
         </Link>
         {authStatus ? (
-          <a
-            href="my-profile"
-            onClick={handleProfileClick} // Llama a la función de redirección
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={toggleDropdown}
             className="mx-4 flex items-center space-x-2"
           >
-            {/* Ícono de perfil */}
-            <FontAwesomeIcon
-              icon={faUser}
-              size="lg"
-              className="text-gray-700"
-            />
+            {profilePicture ? (
+              <Image
+                src={profilePicture}
+                width={40}
+                height={40}
+                alt="Foto de perfil"
+                className="rounded-full"
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faUser}
+                size="lg"
+                className="text-gray-700"
+              />
+            )}
             <span className="text-gray-700">Perfil</span>
-          </a>
-        ) : (
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
+              <a
+                href="my-profile"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Ver perfil
+              </a>
+              <a
+                href=""
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Inscribirme como profesional
+              </a>
+              <hr className="border-gray-200" />
+              <button
+                onClick={handleLogout}
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+              >
+                Log out
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
           <>
             <Link
               href="/auth/login"

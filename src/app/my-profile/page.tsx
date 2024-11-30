@@ -6,14 +6,17 @@ import { useRouter } from "next/navigation";
 import UserProfile from "@/components/profile/UserProfile";  // Asegúrate de que la ruta sea correcta
 
 const MyProfile = () => {
-  const { user, isAuthenticated } = useAuth0();  // Obtener datos del usuario
+  const { user } = useAuth0();  // Obtener datos del usuario
   const [role, setRole] = useState<string | null>(null);
+  const [authStatus, setAuthStatus] =  useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (localStorage.getItem('email')) {
+      setAuthStatus(true);
       const fetchUserRole = async () => {
-        const userRole = user?.sub ? await getUserRole(user.sub) : null;
+        const sub = (localStorage.getItem('sub'));
+        const userRole = sub ? await getUserRole(sub) : null;
         setRole(userRole);
       };
 
@@ -21,7 +24,7 @@ const MyProfile = () => {
     } else {
       router.push("/auth/login");  // Si no está autenticado, redirige al login
     }
-  }, [isAuthenticated, user, router]);
+  }, [authStatus, user, router]);
 
   // Simulación de función para obtener el rol del usuario desde una API o base de datos
   const getUserRole = async (userId: string) => {
