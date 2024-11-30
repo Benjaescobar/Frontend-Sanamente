@@ -70,7 +70,7 @@ export default function PsychologistProfile() {
         </div>
         <div className="flex-shrink-0 w-1/3">
           <h1 className="text-xl font-bold mb-4">Schedule an Appointment</h1>
-          <InlineWidget url={therapist.nombre === "Juan" ? "https://calendly.com/eaesquivel-uc" : "https://calendly.com/super-edu-bkn1"} />
+          <InlineWidget url={therapist.url_calendly} />
         </div>
       </div>
     </div>
