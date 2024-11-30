@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,7 +17,7 @@ const StepForm = () => {
   };
 
 
-  const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
 
   const specialtiesOptions = [
     "Terapia cognitivo-conductual",
@@ -27,14 +27,14 @@ const StepForm = () => {
     "Psicología infantil",
   ];
 
-  const handleSpecialtyChange = (e) => {
+  const handleSpecialtyChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const value = e.target.value;
     if (!selectedSpecialties.includes(value)) {
       setSelectedSpecialties((prev) => [...prev, value]);
     }
   };
 
-  const removeSpecialty = (specialty) => {
+  const removeSpecialty = (specialty: string) => {
     setSelectedSpecialties((prev) =>
       prev.filter((item) => item !== specialty)
     );
