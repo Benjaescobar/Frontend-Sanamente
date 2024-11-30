@@ -6,8 +6,10 @@ export default function Login() {
   const { loginWithRedirect, isAuthenticated, user, getIdTokenClaims, error } = useAuth0();
 
   useEffect(() => {
+    
     const saveUser = async () => {
       if (isAuthenticated && user) {
+        console.log(user);
         try {
           const response = await fetch("https://backend-sanamente-d7ej.onrender.com/usuarios/crear", {
             method: "POST",
@@ -29,6 +31,8 @@ export default function Login() {
         }
       }
     };
+    
+    
 
     saveUser();
   }, [isAuthenticated, user, getIdTokenClaims]);
