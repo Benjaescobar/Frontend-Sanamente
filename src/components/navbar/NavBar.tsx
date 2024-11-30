@@ -3,14 +3,16 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faL, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useAuth0 } from "@auth0/auth0-react";
+import { getUserByEmail } from "@/services/apiService";
 
 export default function NavBar() {
   const { logout, isAuthenticated, user } = useAuth0();
 
   const pathname = usePathname(); // Obtener la ruta actual
   const [authStatus, setAuthStatus] = useState(isAuthenticated);
+  const [psicologoBool, setPscologoBool] = useState<boolean>(false)
 
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -34,7 +36,43 @@ export default function NavBar() {
       localStorage.setItem('name', user.name || '');
       localStorage.setItem('sub', user.sub || '');
       localStorage.setItem('picture', user.picture || '');
+      const saveUser = async () => {
+        if (isAuthenticated && user) {
+          console.log(user);
+          try {
+            const response = await fetch("https://backend-sanamente-d7ej.onrender.com/usuarios/crear", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json" 
+              },
+              body: JSON.stringify({
+                nombre: user.name,
+                email: user.email,
+              }),
+            });
+            if (!response.ok) {
+              const text = await response.text();
+              const data = JSON.parse(text);
+              if (data.error === "Email ya registrado."){
+                const userData = await getUserByEmail(user.email ? user.email : "");
+                localStorage.setItem("id", userData.id);
+                console.log(userData);
+                localStorage.setItem("tipo", userData.tipo);
+              }else{
+                console.error("Error al guardar el usuario en el backend:", data.error);
+              }
+            }
+          } catch (error) {
+            console.error("Error durante el guardado del usuario:", error);
+          }
+        }
+      };
+  
+      saveUser();
     }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
     if(localStorage.getItem('email')){
       const picture = localStorage.getItem("picture");
       if (picture) {
@@ -44,7 +82,13 @@ export default function NavBar() {
     }else{
       setAuthStatus(false);
     }
-  }, [isAuthenticated]);
+    const tipo = localStorage.getItem("tipo");
+      if (tipo === "psicologo") {
+        setPscologoBool(true);
+      } else{
+        setPscologoBool(false);
+      }
+  })
 
   // Función para determinar si una ruta está activa
   const isActive = (route: string) => pathname === route;
@@ -88,14 +132,6 @@ export default function NavBar() {
           >
             Feed Posts
           </Link>
-          {/* <Link
-            href="/grupos-apoyo"
-            className={`px-3 py-1 text-gray-700 rounded-md ${
-              isActive("/grupos-apoyo") ? "bg-red-500 text-white hover:bg-red-400" : ""
-            }`}
-          >
-            Grupos de apoyo
-          </Link> */}
         </div>
       )}
 
@@ -136,12 +172,13 @@ export default function NavBar() {
               >
                 Ver perfil
               </a>
-              <a
-                href=""
+              {!psicologoBool && (<a
+                href="/auth/pro-signup"
                 className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Inscribirme como profesional
-              </a>
+              </a>)}
+              
               <hr className="border-gray-200" />
               <button
                 onClick={handleLogout}

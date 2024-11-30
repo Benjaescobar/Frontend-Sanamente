@@ -1,4 +1,5 @@
 "use client";
+import { getUserByEmail } from "@/services/apiService";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 
@@ -17,8 +18,7 @@ export default function Login() {
               "Content-Type": "application/json" 
             },
             body: JSON.stringify({
-              auth0Id: user.sub, // ID único de Auth0
-              name: user.name,
+              nombre: user.name,
               email: user.email,
             }),
           });
@@ -31,8 +31,6 @@ export default function Login() {
         }
       }
     };
-    
-    
 
     saveUser();
   }, [isAuthenticated, user, getIdTokenClaims]);

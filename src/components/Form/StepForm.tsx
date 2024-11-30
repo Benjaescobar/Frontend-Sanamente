@@ -1,23 +1,23 @@
-"use client"
-import React, { useState, ChangeEvent } from "react";
+"use client";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { createPsychologist } from "@/services/apiService";
+import { useRouter } from "next/navigation";
 
 const StepForm = () => {
-  const [step, setStep] = useState(1); // Estado para el paso actual
-
-  // Función para avanzar al siguiente paso
-  const nextStep = () => {
-    if (step < 3) setStep(step + 1);
-  };
-
-  // Función para retroceder al paso anterior
-  const prevStep = () => {
-    if (step > 1) setStep(step - 1);
-  };
-
-
+  const router = useRouter();
+  const [email, setEmail] = useState<string>("");
+  const [nombre, setNombre] = useState<string>("");
+  const [id, setID] = useState<string>("");
+  const [experiencia, setExperiencia] = useState<string>("");
+  const [calendly, setCalendly] = useState<string>("");
+  const [descripcion, setDescripcion] = useState<string>("");
+  const [ubicacion, setUbicacion] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
+  const [step, setStep] = useState(1);
 
   const specialtiesOptions = [
     "Terapia cognitivo-conductual",
@@ -27,302 +27,305 @@ const StepForm = () => {
     "Psicología infantil",
   ];
 
-  const handleSpecialtyChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  useEffect(() => {
+    const i = localStorage.getItem("id");
+    setID(i ? i : "");
+    const e = localStorage.getItem("email");
+    setEmail(e ? e : "");
+    const n = localStorage.getItem("name");
+    setNombre(n ? n : "");
+  }, []);
+
+  const handleSpecialtyChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    if (!selectedSpecialties.includes(value)) {
+    if (value && !selectedSpecialties.includes(value)) {
       setSelectedSpecialties((prev) => [...prev, value]);
     }
   };
 
   const removeSpecialty = (specialty: string) => {
-    setSelectedSpecialties((prev) =>
-      prev.filter((item) => item !== specialty)
-    );
+    setSelectedSpecialties((prev) => prev.filter((item) => item !== specialty));
+  };
+
+  const handleSubmit = () => {
+    const jsonData = {
+      usuario_id: Number(id),
+      url_calendly: `https://calendly.com/${calendly}`,
+      especialidades: selectedSpecialties.join(", "),
+      experiencia: Number(experiencia),
+      descripcion,
+      ubicacion,
+      precio_min: Number(minPrice),
+      precio_max: Number(maxPrice),
+    };
+
+    // console.log(jsonData); // JSON listo para POST
+    createPsychologist(jsonData);
+    localStorage.setItem('psicologo', "1");
+    router.push("/");
+  };
+
+  const nextStep = () => {
+    // Validación antes de avanzar
+    if (step === 1) {
+      if (!email || !nombre) {
+        alert("El nombre y correo son obligatorios.");
+        return;
+      }
+    } else if (step === 2) {
+      if (!selectedSpecialties.length || !experiencia || !minPrice || !maxPrice) {
+        alert("Por favor completa todos los campos requeridos en este paso.");
+        return;
+      }
+    } else if (step === 3) {
+      if (!descripcion || !calendly || !ubicacion) {
+        alert("Por favor completa todos los campos requeridos en este paso.");
+        return;
+      }
+    }
+
+    if (step < 4) setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800">
       <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6 dark:bg-gray-900">
-        {/* Step Progress Bar */}
-        <div className="flex justify-center w-full items-center">
-          <ol className="flex items-center justify-center w-full mb-6">
-            <li
-              className={`flex w-full items-center ${
-                step >= 1
-                  ? "text-blue-600 dark:text-blue-500"
-                  : "text-gray-400 dark:text-gray-500"
-              } after:content-[''] after:w-full after:h-1 after:border-b ${
-                step >= 2
-                  ? "after:border-blue-100 dark:after:border-blue-800"
-                  : "after:border-gray-100 dark:after:border-gray-700"
-              } after:border-4 after:inline-block`}
-            >
-              <div
-                className={`flex items-center justify-center w-10 h-10 ${
-                  step >= 1
-                    ? "bg-blue-100 dark:bg-blue-800"
-                    : "bg-gray-100 dark:bg-gray-700"
-                } rounded-full lg:h-12 lg:w-12 shrink-0`}
-              >
-                <span
-                  className={`text-sm font-medium ${
-                    step >= 1 ? "text-blue-600" : "text-gray-400"
-                  }`}
-                >
-                  1
-                </span>
-              </div>
-            </li>
-            <li
-              className={`flex w-full items-center ${
-                step >= 2
-                  ? "text-blue-600 dark:text-blue-500"
-                  : "text-gray-400 dark:text-gray-500"
-              } after:content-[''] after:w-full after:h-1 after:border-b ${
-                step >= 3
-                  ? "after:border-blue-100 dark:after:border-blue-800"
-                  : "after:border-gray-100 dark:after:border-gray-700"
-              } after:border-4 after:inline-block`}
-            >
-              <div
-                className={`flex items-center justify-center w-10 h-10 ${
-                  step >= 2
-                    ? "bg-blue-100 dark:bg-blue-800"
-                    : "bg-gray-100 dark:bg-gray-700"
-                } rounded-full lg:h-12 lg:w-12 shrink-0`}
-              >
-                <span
-                  className={`text-sm font-medium ${
-                    step >= 2 ? "text-blue-600" : "text-gray-400"
-                  }`}
-                >
-                  2
-                </span>
-              </div>
-            </li>
-            <li
-              className={`flex items-center ${
-                step >= 3
-                  ? "text-blue-600 dark:text-blue-500"
-                  : "text-gray-400 dark:text-gray-500"
+        {/* Barra de progreso */}
+        <div className="flex justify-between mb-6">
+          {[1, 2, 3, 4].map((num) => (
+            <div
+              key={num}
+              className={`flex-1 h-2 rounded-full ${
+                step >= num ? "bg-blue-600" : "bg-gray-300"
               }`}
-            >
-              <div
-                className={`flex items-center justify-center w-10 h-10 ${
-                  step >= 3
-                    ? "bg-blue-100 dark:bg-blue-800"
-                    : "bg-gray-100 dark:bg-gray-700"
-                } rounded-full lg:h-12 lg:w-12 shrink-0`}
-              >
-                <span
-                  className={`text-sm font-medium ${
-                    step >= 3 ? "text-blue-600" : "text-gray-400"
-                  }`}
-                >
-                  3
-                </span>
-              </div>
-            </li>
-          </ol>
+            ></div>
+          ))}
         </div>
 
-        {/* Dynamic Form Content */}
+        {/* Contenido del formulario */}
         {step === 1 && (
           <div>
             <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Información personal
+              Información Personal
             </h3>
-            <div className="grid gap-4 mb-6">
-              <div>
-                <label
-                  htmlFor="firstname"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="firstname"
-                  className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="Nombre"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="lastname"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="lastname"
-                  className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="Apellido"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="rut"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="rut"
-                  className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="00.000.000-0"
-                  required
-                />
-              </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Nombre Completo
+              </label>
+              <input
+                type="text"
+                value={nombre}
+                disabled
+                placeholder="Este es tu nombre completo registrado"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Email
+              </label>
+              <input
+                type="text"
+                value={email}
+                disabled
+                placeholder="Este es tu correo registrado"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
             </div>
           </div>
         )}
+
         {step === 2 && (
           <div>
-          <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-            Información profesional
-          </h3>
-          <div className="grid gap-4 mb-6">
-            <div>
-              <label
-                htmlFor="especialidades"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+            <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+              Información Profesional
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
                 Especialidades
               </label>
               <select
-                id="especialidades"
-                className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
+                className="block w-full rounded-md border-gray-300 p-2.5"
                 onChange={handleSpecialtyChange}
               >
-                <option value="">Selecciona una especialidad</option>
+                <option value="">Seleccione una especialidad</option>
                 {specialtiesOptions.map((specialty, index) => (
                   <option key={index} value={specialty}>
                     {specialty}
                   </option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label
-                htmlFor="selectedSpecialties"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Especialidades seleccionadas
-              </label>
-              <div
-                id="selectedSpecialties"
-                className=""
-              >
-                {selectedSpecialties.length > 0 ? (
-                  selectedSpecialties.map((specialty, index) => (
-                    <span
-                      key={index}
-                      className="border border-red-500 rounded-xl mx-3 my-1 p-2 py-2 text-red-500 inline-flex"
+              <div className="mt-2">
+                {selectedSpecialties.map((specialty, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700 mr-2"
+                  >
+                    {specialty}
+                    <button
+                      onClick={() => removeSpecialty(specialty)}
+                      className="ml-2 text-blue-500"
                     >
-                      {specialty}
-                      <button
-                        className="ml-2 text-red-600"
-                        onClick={() => removeSpecialty(specialty)}
-                        >
-                        <FontAwesomeIcon icon={faTimesCircle} />
-                        </button>
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-gray-500">No hay especialidades seleccionadas</span>
-                )}
+                      <FontAwesomeIcon icon={faTimesCircle} />
+                    </button>
+                  </span>
+                ))}
               </div>
             </div>
-            <div>
-              <label
-                htmlFor="especialidades"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Años de experiencia
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Años de Experiencia
               </label>
-              <select
-                id="años"
-                className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-              >
-                <option value="">Años de experiencia</option>
-                <option value="0">
-                    0 Años
-                </option>
-                <option value="1">
-                    1 Año
-                </option>
-                <option value="2">
-                    2 Años
-                </option>
-                <option value="3">
-                    Más de 3 Años
-                </option>
-                <option value="5">
-                    Más de 5 Años
-                </option>
-                <option value="10">
-                    Más de 10 Años
-                </option>
-              </select>
+              <input
+                type="text"
+                value={experiencia}
+                onChange={(e) => setExperiencia(e.target.value)}
+                placeholder="Ejemplo: 5 años"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
             </div>
-          </div>
-        </div>
-        )}
-        {step === 3 && (
-          <div>
-            <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Professional Info
-            </h3>
-            <div className="grid gap-4 mb-6">
-                <div>
-                <label
-                  htmlFor="calendly"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Url de calendly
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Precio Mínimo
                 </label>
                 <input
                   type="text"
-                  id="calendly"
-                  className="border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="calendly/sdfasdf"
-                  required
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  placeholder="Ejemplo: 20"
+                  className="block w-full rounded-md border-gray-300 p-2.5"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Precio Máximo
+                </label>
+                <input
+                  type="text"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  placeholder="Ejemplo: 100"
+                  className="block w-full rounded-md border-gray-300 p-2.5"
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between">
-          {step > 1 && (
+        {step === 3 && (
+          <div>
+            <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+              Descripción y Ubicación
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Descripción
+              </label>
+              <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                placeholder="Describe brevemente tus servicios"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Usuario de Calendly
+              </label>
+              <input
+                type="text"
+                value={calendly}
+                onChange={(e) => setCalendly(e.target.value)}
+                placeholder="Ejemplo: CarlosFernandez"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                Ubicación
+              </label>
+              <input
+                type="text"
+                value={ubicacion}
+                onChange={(e) => setUbicacion(e.target.value)}
+                placeholder="Ciudad o región donde trabajas"
+                className="block w-full rounded-md border-gray-300 p-2.5"
+              />
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div>
+            <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+              Resumen de Información
+            </h3>
+            <p>
+              <strong>Nombre:</strong> {nombre}
+            </p>
+            <p>
+              <strong>Email:</strong> {email}
+            </p>
+            <p>
+              <strong>Especialidades:</strong> {selectedSpecialties.join(", ")}
+            </p>
+            <p>
+              <strong>Años de Experiencia:</strong> {experiencia}
+            </p>
+            <p>
+              <strong>Precio Mínimo:</strong> {minPrice}
+            </p>
+            <p>
+              <strong>Precio Máximo:</strong> {maxPrice}
+            </p>
+            <p>
+              <strong>Descripción:</strong> {descripcion}
+            </p>
+            <p>
+              <strong>URL de Calendly:</strong> {calendly}
+            </p>
+            <p>
+              <strong>Ubicación:</strong> {ubicacion}
+            </p>
+          </div>
+        )}
+
+        {/* Botones de navegación */}
+        <div className="flex justify-between mt-6">
+          {step > 1 ? (
             <button
-              type="button"
               onClick={prevStep}
-              className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              className="px-4 py-2 rounded-md bg-gray-500 text-white"
             >
-              Previous Step
-            </button>
-          )}
-          {step < 3 ? (
-            <button
-              type="button"
-              onClick={nextStep}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-            >
-              Next Step
+              Anterior
             </button>
           ) : (
             <button
-              type="submit"
-              className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              onClick={prevStep}
+              className="px-4 py-2 rounded-md bg-gray-200 text-white"
+              disabled
             >
-              Submit
+              Anterior
+            </button>
+          )}
+          {step < 4 ? (
+            <button
+              onClick={nextStep}
+              className="px-4 py-2 rounded-md bg-blue-600 text-white"
+            >
+              Siguiente
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 rounded-md bg-green-600 text-white"
+            >
+              Enviar
             </button>
           )}
         </div>

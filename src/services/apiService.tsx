@@ -92,6 +92,28 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
   }
 };
 
+export const getUserByEmail = async (email: string) => {
+  try {
+    const response = await api.get(`/usuarios/login/${email}`);
+    const item = response.data;
+    return item;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+export const createPsychologist = async (data: any) => {
+  try {
+    console.log("data:", data)
+    const response = await api.post(`psicologos/crear`, data);
+    console.log(response);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
 
 
 export interface Usuario {
