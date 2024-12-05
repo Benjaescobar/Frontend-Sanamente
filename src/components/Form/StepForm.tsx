@@ -61,7 +61,7 @@ const StepForm = () => {
 
     // console.log(jsonData); // JSON listo para POST
     createPsychologist(jsonData);
-    localStorage.setItem('psicologo', "1");
+    localStorage.setItem("psicologo", "1");
     router.push("/");
   };
 
@@ -73,7 +73,12 @@ const StepForm = () => {
         return;
       }
     } else if (step === 2) {
-      if (!selectedSpecialties.length || !experiencia || !minPrice || !maxPrice) {
+      if (
+        !selectedSpecialties.length ||
+        !experiencia ||
+        !minPrice ||
+        !maxPrice
+      ) {
         alert("Por favor completa todos los campos requeridos en este paso.");
         return;
       }
@@ -92,18 +97,74 @@ const StepForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-celeste dark:bg-gray-800">
       <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6 dark:bg-gray-900">
         {/* Barra de progreso */}
-        <div className="flex justify-between mb-6">
-          {[1, 2, 3, 4].map((num) => (
-            <div
-              key={num}
-              className={`flex-1 h-2 rounded-full ${
-                step >= num ? "bg-blue-600" : "bg-gray-300"
-              }`}
-            ></div>
-          ))}
+        <div className="flex flex-col items-center w-full">
+          {/* Contenedor de los pasos */}
+          <div className="relative flex items-center justify-between w-[95%] mb-6">
+            {[1, 2, 3, 4].map((num, index) => (
+              <React.Fragment key={num}>
+                {/* Contenedor del círculo y etiqueta */}
+                <div className="relative flex items-center flex-col">
+                  {/* Número circular */}
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                      step >= num
+                        ? "bg-red-500 text-white"
+                        : "bg-gray-300 text-gray-600"
+                    }`}
+                    style={{
+                      fontWeight: "normal",
+                      zIndex: 10, // Círculos siempre encima
+                    }}
+                  >
+                    {num}
+                  </div>
+                  {/* Línea entre círculos */}
+                  {index < 3 && (
+                    <div
+                      className="absolute top-5 left-[50%] right-[-50%] h-1 bg-gray-300"
+                      style={{
+                        width: "185px", // Asegura que todas las líneas tengan el mismo tamaño
+                        backgroundColor:
+                          step > num
+                            ? "rgb(239, 68, 68)"
+                            : "rgb(209, 213, 219)", // Color dinámico
+                        zIndex: 5, // Línea detrás de los círculos
+                        height: "4px", // Grosor uniforme
+                        transition: "background-color 0.3s ease", // Transición suave
+                      }}
+                    ></div>
+                  )}
+                  {/* Etiqueta debajo del círculo */}
+                  <span
+                    className={`text-center mt-6 ${
+                      step >= num ? "text-red-500" : "text-gray-400"
+                    }`}
+                    style={{ transform: "translateY(-20px)" }} // Esto sube el texto 20px hacia arriba
+                  >
+                    {
+                      [
+                        <>
+                          Información <br /> Personal
+                        </>,
+                        <>
+                          Información <br /> Profesional
+                        </>,
+                        <>
+                          Descripción y <br /> Ubicación
+                        </>,
+                        <>
+                          Revisión y <br /> Confirmación
+                        </>,
+                      ][index]
+                    }
+                  </span>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
         </div>
 
         {/* Contenido del formulario */}
