@@ -254,6 +254,57 @@ export default function PsychologistProfile() {
           </div>
         </div>
       </div>
+        {/* Modal de Valoraciones */}
+        {isReviewModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 p-6">
+          <div className="bg-white rounded-lg max-w-3xl w-full max-h-[80vh] flex relative overflow-hidden">
+            {/* Botón de cerrar */}
+            <button
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              onClick={() => setIsReviewModalOpen(false)}
+            >
+              <FontAwesomeIcon icon={faTimes} className="text-lg" />
+            </button>
+
+            {/* Divisor izquierdo */}
+            <div className="w-1/3 p-6 bg-gray-100 rounded-l-lg flex items-center justify-center flex-col">
+              <div className="text-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  Información
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Aquí puedes ver y dejar tu valoración para {therapist.nombre}
+                </p>
+              </div>
+              <button
+                className="bg-blue-400 text-white px-2 py-1 rounded-lg hover:bg-blue-500"
+                onClick={() => {
+                  setIsReviewModalOpen(false);
+                  setIsWriteReviewModalOpen(true);
+                }}
+              >
+                Dejar review
+              </button>
+            </div>
+
+            {/* Contenido de valoraciones */}
+            <div className="p-6 w-2/3 overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4">Valoraciones</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Promedio de valoraciones:{" "}
+                <span className="text-yellow-500 font-bold">
+                  {averageRating.toFixed(1)} / 5
+                </span>
+              </p>
+              <div className="space-y-4">
+                {valoraciones_recibidas.map((review, key) => (
+                  <ReviewCard key={key} reviewData={review} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <BookingModal
         isOpen={isBookingOpen}
         psicologoId={id}

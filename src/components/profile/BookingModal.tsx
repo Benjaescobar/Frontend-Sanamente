@@ -1,5 +1,5 @@
 "use client";
-import { createSession, getTimeSlotsUsed } from "@/services/apiService";
+import { getTimeSlotsUsed } from "@/services/apiService";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
