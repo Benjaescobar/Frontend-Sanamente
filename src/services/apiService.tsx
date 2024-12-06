@@ -114,11 +114,32 @@ export const createPsychologist = async (data: any) => {
   }
 }
 
-export const filterTherapist = async (especialidad: string, experiencia: number, lugar: string, precio_min: number, precio_max: number) => {
+export const filterTherapist = async (especialidad: string, experiencia: string, lugar: string, precio_min: string, precio_max: string) => {
   try {
-    const response = await api.post(`/psicologos/search/${especialidad}/${experiencia}/${lugar}/${precio_min}/${precio_max}`);
-    console.log(response);
-    return response.data;
+    const response = await api.post(`/psicologos/search/`, {
+        "esp": especialidad,
+        "exp": experiencia,
+        "ubic": lugar,
+        "precio_min": precio_min,
+        "precio_max": precio_max
+    });
+    return response.data.map((item: any): Therapist => ({
+      id: item.usuario_id,
+      usuario_id: item.usuario_id,
+      url_calendly: item.url_calendly,
+      especialidades: item.especialidades,
+      experiencia: item.experiencia,
+      descripcion: item.descripcion,
+      ubicacion: item.ubicacion,
+      precio_min: item.precio_min,
+      precio_max: item.precio_max,
+      createdAt: item.createdAt,
+      nombre: item.usuario.nombre,
+      email: item.usuario.email,
+      foto: item.usuario.foto,
+      modalidad: item.modalidad || "Presencial",
+      metodo: item.metodo || "Orientación Psicoanalítica",
+    }));
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
