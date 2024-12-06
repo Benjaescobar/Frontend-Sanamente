@@ -114,6 +114,101 @@ export const createPsychologist = async (data: any) => {
   }
 }
 
+export const filterTherapist = async (especialidad: string, experiencia: number, lugar: string, precio_min: number, precio_max: number) => {
+  try {
+    const response = await api.post(`/psicologos/search/${especialidad}/${experiencia}/${lugar}/${precio_min}/${precio_max}`);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const createSession = async (paciente_id: number, psicologo_id: number, fecha: string) => {
+  const payload = {
+    paciente_id,
+    psicologo_id,
+    fecha
+  }
+  console.log("Payload Create Session:", payload);
+  try {
+    const response = await api.post(`/sesiones/crear`, payload);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const getSessionsByPacientId = async (id_paciente: any) => {
+  try {
+    const response = await api.get('/sesiones/');
+    const sesiones = response.data;
+
+    // Filtrar sesiones por paciente_id
+    const filteredSessions = sesiones.filter(
+      (sesion: any) => sesion.paciente_id === id_paciente
+    );
+
+    return filteredSessions; // Retorna solo las sesiones del paciente
+
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const getSessionsByPacientIdAndPsychologistId = async (
+  id_paciente: any,
+  id_psicologo: any
+) => {
+  try {
+    const response = await api.get('/sesiones/');
+    const sesiones = response.data;
+
+    // Filtrar sesiones por paciente_id y psicologo_id
+    const filteredSessions = sesiones.filter(
+      (sesion: any) =>
+        sesion.paciente_id === id_paciente && sesion.psicologo_id === id_psicologo
+    );
+
+    return filteredSessions; // Retorna solo las sesiones que coinciden con ambos criterios
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+
+export const getTimeSlotsUsed = async (id_psicologo: any, fecha: any) => {
+  try {
+    const response = await api.get(`/sesiones/ocupadas/${id_psicologo}/${fecha}`)
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const createReview = async (autor_id: any, evaluado_id: any, puntuacion: any, comentario: any) => {
+  try {
+    const response = await api.post(`/valoraciones/crear/`, {
+      autor_id,
+      evaluado_id,
+      puntuacion,
+      comentario
+    })
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 
 
 export interface Usuario {
