@@ -11,7 +11,7 @@ export default function NavBar() {
   const { logout, isAuthenticated, user } = useAuth0();
 
   const pathname = usePathname(); // Obtener la ruta actual
-  const [authStatus, setAuthStatus] = useState(isAuthenticated);
+  const [authStatus, setAuthStatus] = useState(false);
   const [psicologoBool, setPscologoBool] = useState<boolean>(false)
 
   const [profilePicture, setProfilePicture] = useState<string | null>(null);

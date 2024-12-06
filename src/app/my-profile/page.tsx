@@ -16,7 +16,7 @@ const MyProfile = () => {
       setAuthStatus(true);
       const fetchUserRole = async () => {
         const sub = (localStorage.getItem('sub'));
-        const userRole = sub ? await getUserRole(sub) : null;
+        const userRole = sub ? await getUserRole() : null;
         setRole(userRole);
       };
 
@@ -27,9 +27,12 @@ const MyProfile = () => {
   }, [authStatus, user, router]);
 
   // Simulación de función para obtener el rol del usuario desde una API o base de datos
-  const getUserRole = async (userId: string) => {
-    // Llamada a la API o lógica para obtener el rol
-    return userId === "psicologoId" ? "psicologo" : "paciente"; // Aquí deberías usar tu lógica real
+  const getUserRole = async () => {
+    if (localStorage.getItem('tipo') == "psicologo"){
+      return "psicologo"
+    } else {
+      return "paciente"
+    }
   };
 
   return (
@@ -39,7 +42,7 @@ const MyProfile = () => {
       ) : role === "psicologo" ? (
         <h1>Hola Psicologo</h1>
       ) : (
-        <UserProfile />  // Renderizar UserProfile si el rol es "paciente"
+        <UserProfile /> 
       )}
     </div>
   );
