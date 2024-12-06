@@ -1,7 +1,11 @@
-
 // components/ProfessionalCard.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { createReview, getSessionsByPacientIdAndPsychologistId } from "@/services/apiService";
+import dayjs from "dayjs";
+import ReviewModal from "@/components/profile/ReviewModal";
 
 interface ContentProps {
   nombre: string;
@@ -10,41 +14,76 @@ interface ContentProps {
   precio_min: number;
   experiencia: number;
   foto: string | null;
+  id_psicologo: number;
 }
 
-function Content( {
+function Content({
   nombre,
   descripcion,
   especialidades,
   precio_min,
   experiencia,
   foto,
+  id_psicologo,
 }: ContentProps) {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
+  const [hasSessionsWith, setHadSessionsWith] = useState(false);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      const myId = Number(localStorage.getItem("id"));
+      const sessions = await getSessionsByPacientIdAndPsychologistId(myId, id_psicologo);
+      const filteredSessions = sessions.filter((sesion: any) => dayjs(sesion.estado).isBefore(dayjs(new Date())));
+      setHadSessionsWith(filteredSessions.length > 0);
+    };
+    fetchSessions();
+  }, [id_psicologo]);
+
+  const handleReviewSubmit = async (rating: number, comment: string) => {
+    const myId = localStorage.getItem("id");
+    await createReview(myId, id_psicologo, rating, comment);
+    setIsReviewModalOpen(false);
+    setRating(0);
+    setComment("");
+  };
+
   return (
     <div className="mb-4 w-full max-w-4xl ml-10">
       <div className="flex">
         <Image
-          src={foto || '/images/sergio.png'}
+          src={foto || "/images/sergio.png"}
           alt={nombre}
-          width={170} // Tamaño ajustado
-          height={120} // Tamaño ajustado
+          width={170}
+          height={120}
           className="rounded-lg mr-6 object-cover"
         />
         <div>
-          <h3 className="text-2xl font-bold">{nombre}</h3>
+          <div className="justify-between items-center mb-4">
+            <h3 className="text-2xl font-bold">{nombre}</h3>
+            {hasSessionsWith && (
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
+              >
+                <FontAwesomeIcon icon={faStar} /> Deja tu valoración!
+              </button>
+            )}
+          </div>
           <p className="text-gray-600 mt-2">{descripcion}</p>
           <div className="flex flex-wrap mt-4">
-            {especialidades.split(', ').map((specialty) => (
-                <span
+            {especialidades.split(", ").map((specialty) => (
+              <span
                 key={specialty}
                 className="text-xs border border-red-500 rounded-xl mx-1 my-1 p-1 py-1 text-red-500 inline-flex"
-                >
+              >
                 {specialty
-                    .toLowerCase()
-                    .split(' ')
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')}
-                </span>
+                  .toLowerCase()
+                  .split(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
+              </span>
             ))}
           </div>
           <div className="grid grid-cols-4 gap-4 mt-6 text-center">
@@ -53,26 +92,25 @@ function Content( {
               <span className="font-normal text-gray-800">${precio_min}</span>
             </div>
             <div>
-              <p className="font-bold text-sm text-gray-800">
-                Años de experiencia
-              </p>
+              <p className="font-bold text-sm text-gray-800">Años de experiencia</p>
               <span className="font-normal text-gray-800">{experiencia}</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Usar el componente ReviewModal */}
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+        rating={rating}
+        setRating={setRating}
+        comment={comment}
+        setComment={setComment}
+      />
     </div>
   );
 }
-
-// export default function ProfessionalCardList( therapists ) {
-//   return (
-//     <div>
-//       {professionals.map((professional, index) => (
-//         <Content key={index} {...professional} />
-//       ))}
-//     </div>
-//   );
-// }
 
 export default Content;

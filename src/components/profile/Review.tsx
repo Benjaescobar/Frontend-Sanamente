@@ -16,7 +16,7 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
       <div className="flex items-start">
         <div className="mr-3">
           <Image
-            src="/images/user-placeholder.png" // Ruta de la imagen del usuario
+            src="/images/default-profile.jpg" // Ruta de la imagen del usuario
             alt="Usuario"
             width={40}
             height={40}
@@ -26,7 +26,23 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">{autor_nombre}</p>
+              <div className="flex justify-between items-center">
+                <p className="font-semibold text-gray-800">{autor_nombre}</p>
+                <div className="flex items-center">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span
+                      key={i}
+                      className={
+                        i < puntuacion
+                          ? "text-yellow-400 text-lg"
+                          : "text-gray-300 text-lg"
+                      }
+                    >
+                      ★
+                    </span>
+                  ))}
+              </div>
+              </div>
               <p className="text-sm text-gray-500">
                 {new Date(createdAt).toLocaleDateString("es-ES", {
                   day: "numeric",
@@ -35,20 +51,7 @@ function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
                 })}
               </p>
             </div>
-            <div className="flex items-center">
-              {Array.from({ length: 5 }, (_, i) => (
-                <span
-                  key={i}
-                  className={
-                    i < puntuacion
-                      ? "text-yellow-400 text-lg"
-                      : "text-gray-300 text-lg"
-                  }
-                >
-                  ★
-                </span>
-              ))}
-            </div>
+            
           </div>
           <p className="text-gray-700 mt-2">{comentario}</p>
         </div>

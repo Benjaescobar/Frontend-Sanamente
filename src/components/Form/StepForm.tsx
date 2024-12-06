@@ -61,7 +61,7 @@ const StepForm = () => {
 
     // console.log(jsonData); // JSON listo para POST
     createPsychologist(jsonData);
-    localStorage.setItem("psicologo", "1");
+    localStorage.setItem("tipo", "psicologo");
     router.push("/");
   };
 

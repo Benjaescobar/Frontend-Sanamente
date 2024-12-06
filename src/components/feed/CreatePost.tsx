@@ -1,9 +1,20 @@
 // components/CreatePost.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function CreatePost() {
   const [postContent, setPostContent] = useState("");
+  const [urlFoto, setUrlFoto] = useState<string | null>("");
+
+  useEffect(()=>{
+    const foto = localStorage.getItem('picture');
+    if (foto != ""){
+      setUrlFoto(foto);
+    } else {
+      setUrlFoto(null);
+    }
+    console.log(foto);
+  })
 
   const handlePostChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPostContent(e.target.value);
@@ -22,11 +33,16 @@ export default function CreatePost() {
   return (
     <div className="flex flex-col justify-around space-y-2 px-6 py-3 pb-4 m-4 rounded-xl border bg-white mx-auto">
       <div className="flex items-center mb-4">
-        <Image
-          src="/images/tu-foto-de-perfil.png" // Cambia esta ruta a la imagen de perfil real
-          alt="Foto de perfil"
-          className="w-10 h-10 rounded-full mr-3"
-        />
+        {urlFoto ? (
+        <Image src={urlFoto} alt="Foto de perfil"
+        className="w-10 h-10 rounded-full mr-3" width={10} height={10}></Image>
+        ) :
+        (
+          <Image src="/images/default-profile.jpg"  alt="Foto de perfil"
+                  className="w-10 h-10 rounded-full mr-3" width={10} height={10}></Image>
+
+        )}
+        
         <textarea
           className="flex-1 p-2 border rounded-lg resize-none placeholder-gray-500 font-normal" // Asegura que el texto no esté en negrita
           placeholder="Comparte con la comunidad..."
