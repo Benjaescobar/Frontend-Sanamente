@@ -73,7 +73,12 @@ const StepForm = () => {
         return;
       }
     } else if (step === 2) {
-      if (!selectedSpecialties.length || !experiencia || !minPrice || !maxPrice) {
+      if (
+        !selectedSpecialties.length ||
+        !experiencia ||
+        !minPrice ||
+        !maxPrice
+      ) {
         alert("Por favor completa todos los campos requeridos en este paso.");
         return;
       }
@@ -92,28 +97,84 @@ const StepForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-celeste dark:bg-gray-800">
       <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6 dark:bg-gray-900">
         {/* Barra de progreso */}
-        <div className="flex justify-between mb-6">
-          {[1, 2, 3, 4].map((num) => (
-            <div
-              key={num}
-              className={`flex-1 h-2 rounded-full ${
-                step >= num ? "bg-blue-600" : "bg-gray-300"
-              }`}
-            ></div>
-          ))}
+        <div className="flex flex-col items-center w-full">
+          {/* Contenedor de los pasos */}
+          <div className="relative flex items-center justify-between w-[95%] mb-6">
+            {[1, 2, 3, 4].map((num, index) => (
+              <React.Fragment key={num}>
+                {/* Contenedor del círculo y etiqueta */}
+                <div className="relative flex items-center flex-col">
+                  {/* Número circular */}
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                      step >= num
+                        ? "bg-red-500 text-white"
+                        : "bg-gray-300 text-gray-600"
+                    }`}
+                    style={{
+                      fontWeight: "normal",
+                      zIndex: 10, // Círculos siempre encima
+                    }}
+                  >
+                    {num}
+                  </div>
+                  {/* Línea entre círculos */}
+                  {index < 3 && (
+                    <div
+                      className="absolute top-5 left-[50%] right-[-50%] h-1 bg-gray-300"
+                      style={{
+                        width: "185px", // Asegura que todas las líneas tengan el mismo tamaño
+                        backgroundColor:
+                          step > num
+                            ? "rgb(239, 68, 68)"
+                            : "rgb(209, 213, 219)", // Color dinámico
+                        zIndex: 5, // Línea detrás de los círculos
+                        height: "4px", // Grosor uniforme
+                        transition: "background-color 0.3s ease", // Transición suave
+                      }}
+                    ></div>
+                  )}
+                  {/* Etiqueta debajo del círculo */}
+                  <span
+                    className={`text-center mt-6 ${
+                      step >= num ? "text-red-500" : "text-gray-400"
+                    }`}
+                    style={{ transform: "translateY(-20px)" }} // Esto sube el texto 20px hacia arriba
+                  >
+                    {
+                      [
+                        <>
+                          Información <br /> Personal
+                        </>,
+                        <>
+                          Información <br /> Profesional
+                        </>,
+                        <>
+                          Descripción y <br /> Ubicación
+                        </>,
+                        <>
+                          Revisión y <br /> Confirmación
+                        </>,
+                      ][index]
+                    }
+                  </span>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
         </div>
 
         {/* Contenido del formulario */}
         {step === 1 && (
           <div>
             <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Información Personal
+              🪪 Información Personal
             </h3>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Nombre Completo
               </label>
               <input
@@ -121,11 +182,11 @@ const StepForm = () => {
                 value={nombre}
                 disabled
                 placeholder="Este es tu nombre completo registrado"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light p-2.5"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Email
               </label>
               <input
@@ -133,7 +194,7 @@ const StepForm = () => {
                 value={email}
                 disabled
                 placeholder="Este es tu correo registrado"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md placeholder-blue-300 placeholder:font-light border-blue-300 p-2.5"
               />
             </div>
           </div>
@@ -142,14 +203,14 @@ const StepForm = () => {
         {step === 2 && (
           <div>
             <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Información Profesional
+              🧠 Información Profesional
             </h3>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Especialidades
               </label>
               <select
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md border-blue-300 p-2.5"
                 onChange={handleSpecialtyChange}
               >
                 <option value="">Seleccione una especialidad</option>
@@ -163,7 +224,7 @@ const StepForm = () => {
                 {selectedSpecialties.map((specialty, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700 mr-2"
+                    className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-light text-blue-700 mr-2"
                   >
                     {specialty}
                     <button
@@ -177,7 +238,7 @@ const StepForm = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Años de Experiencia
               </label>
               <input
@@ -185,32 +246,32 @@ const StepForm = () => {
                 value={experiencia}
                 onChange={(e) => setExperiencia(e.target.value)}
                 placeholder="Ejemplo: 5 años"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light p-2.5"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                <label className="block text-sm font-medium text-blue-400 dark:text-white">
                   Precio Mínimo
                 </label>
                 <input
                   type="text"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  placeholder="Ejemplo: 20"
-                  className="block w-full rounded-md border-gray-300 p-2.5"
+                  placeholder="Ejemplo: 20000"
+                  className="block w-full rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light p-2.5"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                <label className="block text-sm font-medium text-blue-400 dark:text-white">
                   Precio Máximo
                 </label>
                 <input
                   type="text"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  placeholder="Ejemplo: 100"
-                  className="block w-full rounded-md border-gray-300 p-2.5"
+                  placeholder="Ejemplo: 100000"
+                  className="block w-full rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light p-2.5"
                 />
               </div>
             </div>
@@ -220,21 +281,21 @@ const StepForm = () => {
         {step === 3 && (
           <div>
             <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Descripción y Ubicación
+              📄 Descripción y Ubicación
             </h3>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Descripción
               </label>
               <textarea
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="Describe brevemente tus servicios"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light  p-2.5"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Usuario de Calendly
               </label>
               <input
@@ -242,11 +303,11 @@ const StepForm = () => {
                 value={calendly}
                 onChange={(e) => setCalendly(e.target.value)}
                 placeholder="Ejemplo: CarlosFernandez"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light  p-2.5"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Ubicación
               </label>
               <input
@@ -254,7 +315,7 @@ const StepForm = () => {
                 value={ubicacion}
                 onChange={(e) => setUbicacion(e.target.value)}
                 placeholder="Ciudad o región donde trabajas"
-                className="block w-full rounded-md border-gray-300 p-2.5"
+                className="block w-full rounded-md rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light  p-2.5"
               />
             </div>
           </div>
@@ -263,7 +324,7 @@ const StepForm = () => {
         {step === 4 && (
           <div>
             <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
-              Resumen de Información
+              👤 Resumen de Información
             </h3>
             <p>
               <strong>Nombre:</strong> {nombre}
