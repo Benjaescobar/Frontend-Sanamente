@@ -2,6 +2,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useRouter } from 'next/navigation';
 
 dayjs.extend(relativeTime);
 
@@ -13,29 +14,31 @@ interface ProfessionalBlogPostProps {
   imageUrl: string;
   timeSincePost: string;
   color: string;
+  autorId: string;
+  redirect: boolean;
 }
 
 export default function ProfessionalBlogPost({
   contenido,
   createdAt,
   color,
-  nombre
+  nombre,
+  autorId,
+  redirect
 }: ProfessionalBlogPostProps) {
 
+  const router = useRouter();
   const timeSincePost = dayjs(createdAt).fromNow();
 
   return (
     <div className={'flex flex-col justify-around space-y-3 px-8 py-4 pb-10 m-5 rounded-xl ' + color}>
         <div className='flex space-x-1'>
-            {/* <Image 
-                src={imageUrl} 
-                alt={name} 
-                width={70} // Puedes ajustar el ancho (en píxeles) según tus necesidades
-                height={70} // Puedes ajustar la altura (en píxeles) según tus necesidades
-                className="rounded-full mr-4 object-cover"
-                /> */}
             <div className='flex flex-col justify-center space-y-2'>
+              {redirect ? 
+                (<h1 className='text-red-500 text-2xl font-bold cursor-pointer' onClick={() => {router.push(`profile/${autorId}`)}}>{nombre}</h1>) 
+                : (
                 <h1 className='text-red-500 text-2xl font-bold'>{nombre}</h1>
+                )}
                 <span className='font-light text-xs'>{timeSincePost}</span>
             </div>
         </div>

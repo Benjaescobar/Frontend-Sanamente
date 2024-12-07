@@ -60,4 +60,5 @@ export interface ProfessionalBlogPostProps {
   nombre: string;
   imageUrl: string;
   color?: string;
+  autorId: string;
 }

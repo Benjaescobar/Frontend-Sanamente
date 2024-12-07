@@ -126,6 +126,10 @@ export default function PsychologistProfile() {
     id_psicologo: Number(id),
   };
 
+  // Ordenar publicaciones por fecha descendente (más reciente primero)
+  const sortedPublications = [...publicaciones].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Reemplaza "createdAt" con el campo correcto
+  });
   const averageRating =
     valoraciones_recibidas.reduce((acc, review) => acc + review.puntuacion, 0) /
     valoraciones_recibidas.length || 0;
@@ -156,16 +160,17 @@ export default function PsychologistProfile() {
             Publicaciones de {therapist.nombre}
           </h1>
           <div className="min-w-3/4">
-            {publicaciones.map((post, index) => (
+            {sortedPublications.map((post, index) => (
               <ProfessionalBlogPost
+                autorId={String(id)}
+                redirect={false}
                 content=""
                 nombre={therapist.nombre}
                 imageUrl="/images/foto.png"
                 timeSincePost=""
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
-                {...post}
-              />
+                {...post}              />
             ))}
           </div>
         </div>

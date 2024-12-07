@@ -14,7 +14,7 @@ export default function BlogFeed({ publicaciones }: BlogFeedProps) {
     <div className="min-w-3/4">
       {publicaciones.map((post, index) => (
         <ProfessionalBlogPost
-          content={""} timeSincePost={""} key={index}
+          content={""} timeSincePost={""} key={index} redirect={true}
           color={colorClass[index % 2]}
           {...post}        />
       ))}
