@@ -282,6 +282,21 @@ export const createReview = async (
   }
 };
 
+
+export const createPost = async (autor_id: any, contenido: any) => {
+  try{
+    const response = await api.post(`/publicaciones/publicar/`, {
+      contenido,
+      autor_id
+    })
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error;
+  }
+}
+
+
 export interface Usuario {
   nombre: string;
   foto: string | null;
