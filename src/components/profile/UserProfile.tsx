@@ -20,7 +20,6 @@ const UserProfile: React.FC = () => {
   const [sessions, setSessions] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState();
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -107,7 +106,7 @@ const UserProfile: React.FC = () => {
             height={150}
           /> */}
           <Image
-            src={imageUrl ? imageUrl : "/images/default-profile.jpg"}
+            src={"/images/default-profile.jpg"}
             alt={''}
             className="rounded-full p-5"
             width={150}
