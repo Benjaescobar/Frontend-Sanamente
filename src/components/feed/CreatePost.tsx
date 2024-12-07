@@ -1,10 +1,12 @@
 // components/CreatePost.tsx
 import React, { useEffect, useState } from "react";
+import { createPost, getTherapistById } from "@/services/apiService"
 import Image from "next/image";
 
 export default function CreatePost() {
   const [postContent, setPostContent] = useState("");
   const [urlFoto, setUrlFoto] = useState<string | null>("");
+  const [psicologoId, setTherapistId] = useState<any | null>(0)
 
   useEffect(()=>{
     const foto = localStorage.getItem('picture');
@@ -14,6 +16,21 @@ export default function CreatePost() {
       setUrlFoto(null);
     }
     console.log(foto);
+    const id = localStorage.getItem('id');
+    const fetchTherapist = async () => {
+      if (typeof id !== "string") {
+        console.error("Invalid ID format");
+        return;
+      }
+
+      try {
+        const data = await getTherapistById(id);
+        setTherapistId(data.therapist.id);
+      } catch (error) {
+        console.error("Error fetching Therapist:", error);
+      }
+    };
+    fetchTherapist();
   })
 
   const handlePostChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -26,6 +43,9 @@ export default function CreatePost() {
       return;
     }
     // Aquí podrías agregar lógica para enviar el post a la API
+
+    const new_post = createPost(psicologoId, postContent);
+    window.location.reload();
     console.log("Post publicado:", postContent);
     setPostContent("");
   };
