@@ -154,6 +154,7 @@ const PsychologistProfile: React.FC = () => {
             )}
             {publicaciones.map((post, index) => (
               <ProfessionalBlogPost
+                redirect={true}
                 content=""
                 timeSincePost=""
                 key={index}
