@@ -44,7 +44,7 @@ export default function CreatePost() {
     }
     // Aquí podrías agregar lógica para enviar el post a la API
 
-    const new_post = createPost(psicologoId, postContent);
+    createPost(psicologoId, postContent);
     window.location.reload();
     console.log("Post publicado:", postContent);
     setPostContent("");

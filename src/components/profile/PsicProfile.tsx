@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "@/components/navbar/NavBar";
-import { faPlus } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  getSessionsByPacientIdAndPsychologistId,
   getSessionsByPsychologistId,
   getTherapistById,
-  getUserByEmail,
   getUserById,
   TherapistData,
 } from "@/services/apiService";
@@ -14,7 +12,6 @@ import Content from "./Content";
 import ReviewCard from "./Review";
 import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
-import Link from "../../../node_modules/next/link";
 
 const PsychologistProfile: React.FC = () => {
   const [therapistData, setTherapistData] = useState<TherapistData | null>(
