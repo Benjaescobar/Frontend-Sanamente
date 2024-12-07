@@ -1,8 +1,8 @@
 // src/UserProfile.tsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import NavBar from "@/components/navbar/NavBar";
-import '../../app/UserProfile.css';
-import { FaEdit, FaSave } from 'react-icons/fa';
+import "../../app/UserProfile.css";
+import { FaEdit, FaSave } from "react-icons/fa";
 
 interface PersonalInfo {
   age: number;
@@ -27,33 +27,33 @@ interface User {
 
 const UserProfile: React.FC = () => {
   const initialUser: User = {
-    name: 'Juan',
-    profilePicture: 'https://via.placeholder.com/150',
+    name: "Juan",
+    profilePicture: "https://via.placeholder.com/150",
     personalInfo: {
       age: 30,
-      email: 'juan@example.com',
-      specialty: 'Psicología clínica',
+      email: "juan@example.com",
+      specialty: "Psicología clínica",
     },
     appointments: [
       {
         id: 1,
-        psychologist: 'Pedro',
-        date: '10 de noviembre de 2024',
-        review: 'Excelente profesional',
+        psychologist: "Pedro",
+        date: "10 de noviembre de 2024",
+        review: "Excelente profesional",
         rating: 5,
       },
       {
         id: 2,
-        psychologist: 'Pedro',
-        date: '10 de noviembre de 2024',
-        review: 'Bien, pero peor que la anterior',
+        psychologist: "Pedro",
+        date: "10 de noviembre de 2024",
+        review: "Bien, pero peor que la anterior",
         rating: 4,
       },
       {
         id: 3,
-        psychologist: 'Javiera',
-        date: '10 de noviembre de 2024',
-        review: 'No me gustó, demasiado impuntual.',
+        psychologist: "Javiera",
+        date: "10 de noviembre de 2024",
+        review: "No me gustó, demasiado impuntual.",
         rating: 2,
       },
     ],
@@ -79,9 +79,9 @@ const UserProfile: React.FC = () => {
       ...prevUser,
       personalInfo: {
         ...prevUser.personalInfo,
-        [name]: name === 'age' ? Number(value) : value, // Convierte edad a número
+        [name]: name === "age" ? Number(value) : value, // Convierte edad a número
       },
-      name: name === 'name' ? value : prevUser.name, // Actualiza nombre si es el campo de nombre
+      name: name === "name" ? value : prevUser.name, // Actualiza nombre si es el campo de nombre
     }));
   };
 
@@ -114,7 +114,8 @@ const UserProfile: React.FC = () => {
             )}
             <div>
               <p>
-                Edad: {isEditing ? (
+                Edad:{" "}
+                {isEditing ? (
                   <input
                     type="number"
                     name="age"
@@ -127,7 +128,8 @@ const UserProfile: React.FC = () => {
                 )}
               </p>
               <p>
-                Email: {isEditing ? (
+                Email:{" "}
+                {isEditing ? (
                   <input
                     type="email"
                     name="email"
@@ -140,7 +142,8 @@ const UserProfile: React.FC = () => {
                 )}
               </p>
               <p>
-                Especialidad: {isEditing ? (
+                Especialidad:{" "}
+                {isEditing ? (
                   <input
                     type="text"
                     name="specialty"
@@ -159,10 +162,18 @@ const UserProfile: React.FC = () => {
           <h3>Mis Citas</h3>
           {user.appointments.map((appointment) => (
             <div key={appointment.id} className="appointment-card">
-              <p><strong>Psicólogo:</strong> {appointment.psychologist}</p>
-              <p><strong>Fecha:</strong> {appointment.date}</p>
-              <p><strong>Reseña:</strong> {appointment.review}</p>
-              <p><strong>Calificación:</strong> {'⭐'.repeat(appointment.rating)}</p>
+              <p>
+                <strong>Psicólogo:</strong> {appointment.psychologist}
+              </p>
+              <p>
+                <strong>Fecha:</strong> {appointment.date}
+              </p>
+              <p>
+                <strong>Reseña:</strong> {appointment.review}
+              </p>
+              <p>
+                <strong>Calificación:</strong> {"⭐".repeat(appointment.rating)}
+              </p>
             </div>
           ))}
         </section>
