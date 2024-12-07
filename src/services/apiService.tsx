@@ -1,49 +1,51 @@
 // src/services/apiService.ts
-import axios from 'axios';
-
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'https://backend-sanamente-d7ej.onrender.com',
+  baseURL: "https://backend-sanamente-d7ej.onrender.com",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
-
 
 export const getAllTherapist = async (): Promise<Therapist[]> => {
   try {
     const response = await api.get(`/psicologos`);
-    return response.data.map((item: any): Therapist => ({
-      id: item.usuario_id,
-      usuario_id: item.usuario_id,
-      url_calendly: item.url_calendly,
-      especialidades: item.especialidades,
-      experiencia: item.experiencia,
-      descripcion: item.descripcion,
-      ubicacion: item.ubicacion,
-      precio_min: item.precio_min,
-      precio_max: item.precio_max,
-      createdAt: item.createdAt,
-      nombre: item.usuario.nombre,
-      email: item.usuario.email,
-      foto: item.usuario.foto,
-      modalidad: item.modalidad || "Presencial",
-      metodo: item.metodo || "Orientación Psicoanalítica",
-    }));
+    return response.data.map(
+      (item: any): Therapist => ({
+        id: item.usuario_id,
+        usuario_id: item.usuario_id,
+        url_calendly: item.url_calendly,
+        especialidades: item.especialidades,
+        experiencia: item.experiencia,
+        descripcion: item.descripcion,
+        ubicacion: item.ubicacion,
+        precio_min: item.precio_min,
+        precio_max: item.precio_max,
+        createdAt: item.createdAt,
+        nombre: item.usuario.nombre,
+        email: item.usuario.email,
+        foto: item.usuario.foto,
+        modalidad: item.modalidad || "Presencial",
+        metodo: item.metodo || "Orientación Psicoanalítica",
+      })
+    );
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     throw error;
   }
 };
 
 export const getPosts = async (): Promise<Post[]> => {
   const response = await api.get(`publicaciones/`);
-  return response.data.map((post: any): Post => ({
-    contenido: post.contenido,
-    createdAt: post.createdAt,
-    nombre: post.autor.usuario.nombre,
-    imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
-  }));
+  return response.data.map(
+    (post: any): Post => ({
+      contenido: post.contenido,
+      createdAt: post.createdAt,
+      nombre: post.autor.usuario.nombre,
+      imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
+    })
+  );
 };
 
 export const getTherapistById = async (id: string): Promise<TherapistData> => {
@@ -69,25 +71,29 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         modalidad: item.modalidad || "Presencial",
         metodo: item.metodo || "Orientación Psicoanalítica",
       },
-      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map((valoracion: any): Review => ({
-        id: valoracion.id,
-        autor_id: valoracion.autor_id,
-        evaluado_id: valoracion.evaluado_id,
-        puntuacion: valoracion.puntuacion,
-        comentario: valoracion.comentario,
-        createdAt: valoracion.createdAt,
-        autor_nombre: valoracion.autor.nombre,
-        autor_foto: valoracion.autor.foto,
-      })),
-      publicaciones: item.publicaciones.map((publicacion: any): Post => ({
-        contenido: publicacion.contenido,
-        createdAt: publicacion.createdAt,
-        nombre: item.usuario.nombre,
-        imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-      })),
+      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map(
+        (valoracion: any): Review => ({
+          id: valoracion.id,
+          autor_id: valoracion.autor_id,
+          evaluado_id: valoracion.evaluado_id,
+          puntuacion: valoracion.puntuacion,
+          comentario: valoracion.comentario,
+          createdAt: valoracion.createdAt,
+          autor_nombre: valoracion.autor.nombre,
+          autor_foto: valoracion.autor.foto,
+        })
+      ),
+      publicaciones: item.publicaciones.map(
+        (publicacion: any): Post => ({
+          contenido: publicacion.contenido,
+          createdAt: publicacion.createdAt,
+          nombre: item.usuario.nombre,
+          imageUrl: item.usuario.foto || "/images/default-profile.jpg",
+        })
+      ),
     };
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.log("Error fetching data:", error);
     throw error;
   }
 };
@@ -101,57 +107,80 @@ export const getUserByEmail = async (email: string) => {
     console.error("Error fetching data:", error);
     throw error;
   }
-}
+};
 
-export const createPsychologist = async (data: any) => {
+export const getUserById = async (id: string) => {
   try {
-    console.log("data:", data)
-    const response = await api.post(`psicologos/crear`, data);
-    console.log(response);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
-  }
-}
-
-export const filterTherapist = async (especialidad: string, experiencia: string, lugar: string, precio_min: string, precio_max: string) => {
-  try {
-    const response = await api.post(`/psicologos/search/`, {
-        "esp": especialidad,
-        "exp": experiencia,
-        "ubic": lugar,
-        "precio_min": precio_min,
-        "precio_max": precio_max
-    });
-    return response.data.map((item: any): Therapist => ({
-      id: item.usuario_id,
-      usuario_id: item.usuario_id,
-      url_calendly: item.url_calendly,
-      especialidades: item.especialidades,
-      experiencia: item.experiencia,
-      descripcion: item.descripcion,
-      ubicacion: item.ubicacion,
-      precio_min: item.precio_min,
-      precio_max: item.precio_max,
-      createdAt: item.createdAt,
-      nombre: item.usuario.nombre,
-      email: item.usuario.email,
-      foto: item.usuario.foto,
-      modalidad: item.modalidad || "Presencial",
-      metodo: item.metodo || "Orientación Psicoanalítica",
-    }));
+    const response = await api.get(`/usuarios/${id}`);
+    const item = response.data;
+    return item;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
   }
 };
 
-export const createSession = async (paciente_id: number, psicologo_id: number, fecha: string) => {
+export const createPsychologist = async (data: any) => {
+  try {
+    console.log("data:", data);
+    const response = await api.post(`psicologos/crear`, data);
+    console.log(response);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const filterTherapist = async (
+  especialidad: string,
+  experiencia: string,
+  lugar: string,
+  precio_min: string,
+  precio_max: string
+) => {
+  try {
+    const response = await api.post(`/psicologos/search/`, {
+      esp: especialidad,
+      exp: experiencia,
+      ubic: lugar,
+      precio_min: precio_min,
+      precio_max: precio_max,
+    });
+    return response.data.map(
+      (item: any): Therapist => ({
+        id: item.usuario_id,
+        usuario_id: item.usuario_id,
+        url_calendly: item.url_calendly,
+        especialidades: item.especialidades,
+        experiencia: item.experiencia,
+        descripcion: item.descripcion,
+        ubicacion: item.ubicacion,
+        precio_min: item.precio_min,
+        precio_max: item.precio_max,
+        createdAt: item.createdAt,
+        nombre: item.usuario.nombre,
+        email: item.usuario.email,
+        foto: item.usuario.foto,
+        modalidad: item.modalidad || "Presencial",
+        metodo: item.metodo || "Orientación Psicoanalítica",
+      })
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const createSession = async (
+  paciente_id: number,
+  psicologo_id: number,
+  fecha: string
+) => {
   const payload = {
     paciente_id,
     psicologo_id,
-    fecha
-  }
+    fecha,
+  };
   console.log("Payload Create Session:", payload);
   try {
     const response = await api.post(`/sesiones/crear`, payload);
@@ -165,7 +194,7 @@ export const createSession = async (paciente_id: number, psicologo_id: number, f
 
 export const getSessionsByPacientId = async (id_paciente: any) => {
   try {
-    const response = await api.get('/sesiones/');
+    const response = await api.get("/sesiones/");
     const sesiones = response.data;
 
     // Filtrar sesiones por paciente_id
@@ -174,7 +203,6 @@ export const getSessionsByPacientId = async (id_paciente: any) => {
     );
 
     return filteredSessions; // Retorna solo las sesiones del paciente
-
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
@@ -186,13 +214,14 @@ export const getSessionsByPacientIdAndPsychologistId = async (
   id_psicologo: any
 ) => {
   try {
-    const response = await api.get('/sesiones/');
+    const response = await api.get("/sesiones/");
     const sesiones = response.data;
 
     // Filtrar sesiones por paciente_id y psicologo_id
     const filteredSessions = sesiones.filter(
       (sesion: any) =>
-        sesion.paciente_id === id_paciente && sesion.psicologo_id === id_psicologo
+        sesion.paciente_id === id_paciente &&
+        sesion.psicologo_id === id_psicologo
     );
 
     return filteredSessions; // Retorna solo las sesiones que coinciden con ambos criterios
@@ -202,10 +231,28 @@ export const getSessionsByPacientIdAndPsychologistId = async (
   }
 };
 
+export const getSessionsByPsychologistId = async (id_psicologo: any) => {
+  try {
+    const response = await api.get("/sesiones/");
+    const sesiones = response.data;
+
+    // Filtrar sesiones por paciente_id y psicologo_id
+    const filteredSessions = sesiones.filter(
+      (sesion: any) => sesion.psicologo_id === id_psicologo
+    );
+
+    return filteredSessions; // Retorna solo las sesiones que coinciden con ambos criterios
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
 
 export const getTimeSlotsUsed = async (id_psicologo: any, fecha: any) => {
   try {
-    const response = await api.get(`/sesiones/ocupadas/${id_psicologo}/${fecha}`)
+    const response = await api.get(
+      `/sesiones/ocupadas/${id_psicologo}/${fecha}`
+    );
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -214,14 +261,19 @@ export const getTimeSlotsUsed = async (id_psicologo: any, fecha: any) => {
   }
 };
 
-export const createReview = async (autor_id: any, evaluado_id: any, puntuacion: any, comentario: any) => {
+export const createReview = async (
+  autor_id: any,
+  evaluado_id: any,
+  puntuacion: any,
+  comentario: any
+) => {
   try {
     const response = await api.post(`/valoraciones/crear/`, {
       autor_id,
       evaluado_id,
       puntuacion,
-      comentario
-    })
+      comentario,
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -229,8 +281,6 @@ export const createReview = async (autor_id: any, evaluado_id: any, puntuacion: 
     throw error;
   }
 };
-
-
 
 export interface Usuario {
   nombre: string;
