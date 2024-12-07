@@ -230,6 +230,18 @@ export const createReview = async (autor_id: any, evaluado_id: any, puntuacion: 
   }
 };
 
+export const createPost = async (autor_id: any, contenido: any) => {
+  try{
+    const response = await api.post(`/publicaciones/publicar/`, {
+      contenido,
+      autor_id
+    })
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error;
+  }
+}
 
 
 export interface Usuario {
