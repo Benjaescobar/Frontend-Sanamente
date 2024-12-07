@@ -42,6 +42,7 @@ export default function FeedPosts() {
           {publicaciones.map((post, index) => (
             <ProfessionalBlogPost
               content={""} timeSincePost={""} key={index}
+              redirect={true}
               color={colorClass[index % 2]}
               {...post}            />
           ))}

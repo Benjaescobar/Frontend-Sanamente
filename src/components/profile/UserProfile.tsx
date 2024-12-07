@@ -1,172 +1,217 @@
-// src/UserProfile.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from "@/components/navbar/NavBar";
+import Image from 'next/image';
 import '../../app/UserProfile.css';
-import { FaEdit, FaSave } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { getSessionsByPacientId } from '@/services/apiService';
+import dayjs from 'dayjs';
 
-interface PersonalInfo {
-  age: number;
+interface UserProfileData {
   email: string;
-  specialty: string;
-}
-
-interface Appointment {
-  id: number;
-  psychologist: string;
-  date: string;
-  review: string;
-  rating: number;
-}
-
-interface User {
   name: string;
-  profilePicture: string;
-  personalInfo: PersonalInfo;
-  appointments: Appointment[];
+  sub: string;
+  picture: string;
+  id: string;
 }
 
 const UserProfile: React.FC = () => {
-  const initialUser: User = {
-    name: 'Juan',
-    profilePicture: 'https://via.placeholder.com/150',
-    personalInfo: {
-      age: 30,
-      email: 'juan@example.com',
-      specialty: 'Psicología clínica',
-    },
-    appointments: [
-      {
-        id: 1,
-        psychologist: 'Pedro',
-        date: '10 de noviembre de 2024',
-        review: 'Excelente profesional',
-        rating: 5,
-      },
-      {
-        id: 2,
-        psychologist: 'Pedro',
-        date: '10 de noviembre de 2024',
-        review: 'Bien, pero peor que la anterior',
-        rating: 4,
-      },
-      {
-        id: 3,
-        psychologist: 'Javiera',
-        date: '10 de noviembre de 2024',
-        review: 'No me gustó, demasiado impuntual.',
-        rating: 2,
-      },
-    ],
+  const [myData, setMyData] = useState<UserProfileData | null>(null);
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState();
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
-  const [user, setUser] = useState<User>(initialUser);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editableUser, setEditableUser] = useState<User>(initialUser);
+  useEffect(() => {
+    const email = localStorage.getItem('email') || '';
+    const name = localStorage.getItem('name') || '';
+    const sub = localStorage.getItem('sub') || '';
+    const picture = localStorage.getItem('picture') || '';
+    const id = localStorage.getItem('id') || '';
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-    setEditableUser(user); // Restaura la información actual al iniciar la edición
+    setMyData({
+      email,
+      name,
+      sub,
+      picture,
+      id,
+    });
+  }, []);
+
+  useEffect(() => {
+    const fetchPacientData = async () => {
+      if (myData) {
+        const response = await getSessionsByPacientId(Number(myData.id));
+        setSessions(response);
+        // const foto = await getUserPhoto(Number(myData.id));
+        // // Crear un Blob a partir de los datos
+        // const byteArray = new Uint8Array(foto.data); // Convertir array a Uint8Array
+        // const blob = new Blob([byteArray], { type: "image/png" }); 
+        // console.log(blob);
+        // // Crear una URL utilizable a partir del Blob
+        // const url = URL.createObjectURL(blob);
+        // console.log(url);
+        // setImageUrl(url);
+      }
+    };
+
+    fetchPacientData();
+  }, [myData]);
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedPhoto(event.target.files[0]);
+    }
   };
 
-  const handleSave = () => {
-    setUser(editableUser); // Actualiza el usuario con la información editada
-    setIsEditing(false);
+  const handleSavePhoto = async () => {
+    if (myData && selectedPhoto) {
+      try {
+        const photoBlob = new Blob([selectedPhoto], { type: selectedPhoto.type });
+        // await editUserPhoto(Number(myData.id), photoBlob);
+
+        // Actualizar foto en el estado local
+        const photoURL = URL.createObjectURL(photoBlob);
+        setMyData({ ...myData, picture: photoURL });
+
+        alert('Foto actualizada correctamente');
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error al actualizar la foto:', error);
+        alert('Hubo un error al actualizar la foto.');
+      }
+    }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditableUser((prevUser) => ({
-      ...prevUser,
-      personalInfo: {
-        ...prevUser.personalInfo,
-        [name]: name === 'age' ? Number(value) : value, // Convierte edad a número
-      },
-      name: name === 'name' ? value : prevUser.name, // Actualiza nombre si es el campo de nombre
-    }));
-  };
+  const upcomingSessions = sessions.filter((session) =>
+    dayjs(session.estado).isAfter(dayjs())
+  );
+  const pastSessions = sessions.filter((session) =>
+    dayjs(session.estado).isBefore(dayjs())
+  );
 
   return (
     <div>
       <NavBar />
       <div className="profile-container">
-        <header className="profile-header">
-          {/* <Image src={user.profilePicture} alt="Profile" className="profile-picture" width={150} height={150} /> */}
+        <section className="profile-header">
+          {/* <Image
+            src={myData?.picture ? myData.picture : "/images/default-profile.jpg"}
+            alt={''}
+            className="rounded-full p-5"
+            width={150}
+            height={150}
+          /> */}
+          <Image
+            src={imageUrl ? imageUrl : "/images/default-profile.jpg"}
+            alt={''}
+            className="rounded-full p-5"
+            width={150}
+            height={150}
+          />
           <div className="profile-info">
-            {isEditing ? (
-              <input
-                type="text"
-                name="name"
-                value={editableUser.name}
-                onChange={handleInputChange}
-                className="editable-input"
-              />
-            ) : (
-              <h2>{user.name}</h2>
-            )}
-            {isEditing ? (
-              <button onClick={handleSave} className="save-button">
-                <FaSave /> Guardar
-              </button>
-            ) : (
-              <button onClick={handleEditToggle} className="edit-button">
-                <FaEdit /> Editar perfil
-              </button>
-            )}
+            <h2>{myData?.name} </h2>
+            <button
+              onClick={toggleModal}
+              className="text-blue-500 hover:text-blue-700"
+              aria-label="Edit Profile"
+            >
+              <FontAwesomeIcon icon={faEdit} className="h-5 w-5" />
+            </button>
             <div>
-              <p>
-                Edad: {isEditing ? (
-                  <input
-                    type="number"
-                    name="age"
-                    value={editableUser.personalInfo.age}
-                    onChange={handleInputChange}
-                    className="editable-input"
-                  />
-                ) : (
-                  user.personalInfo.age
-                )}
-              </p>
-              <p>
-                Email: {isEditing ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={editableUser.personalInfo.email}
-                    onChange={handleInputChange}
-                    className="editable-input"
-                  />
-                ) : (
-                  user.personalInfo.email
-                )}
-              </p>
-              <p>
-                Especialidad: {isEditing ? (
-                  <input
-                    type="text"
-                    name="specialty"
-                    value={editableUser.personalInfo.specialty}
-                    onChange={handleInputChange}
-                    className="editable-input"
-                  />
-                ) : (
-                  user.personalInfo.specialty
-                )}
-              </p>
+              <p>Email: {myData?.email}</p>
             </div>
           </div>
-        </header>
+        </section>
         <section className="appointments">
-          <h3>Mis Citas</h3>
-          {user.appointments.map((appointment) => (
-            <div key={appointment.id} className="appointment-card">
-              <p><strong>Psicólogo:</strong> {appointment.psychologist}</p>
-              <p><strong>Fecha:</strong> {appointment.date}</p>
-              <p><strong>Reseña:</strong> {appointment.review}</p>
-              <p><strong>Calificación:</strong> {'⭐'.repeat(appointment.rating)}</p>
-            </div>
-          ))}
+          <h3 className="font-bold">Mis citas</h3>
+          {upcomingSessions.length === 0 ? (
+            <p>No tienes citas con este psicólogo.</p>
+          ) : (
+            <>
+              <h3 className="font-light">Próximas sesiones</h3>
+              {upcomingSessions.map((session) => (
+                <div
+                  key={session.id}
+                  className="bg-blue-400 text-white p-3 m-1 rounded-lg hover:bg-blue-300 hover:cursor-pointer"
+                >
+                  {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
+                </div>
+              ))}
+              <h3>Sesiones pasadas</h3>
+              {pastSessions.map((session) => (
+                <div
+                  key={session.id}
+                  className="bg-blue-100 text-blue-300 p-3 m-1 rounded-lg hover:bg-blue-200 hover:cursor-pointer"
+                >
+                  {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
+                </div>
+              ))}
+            </>
+          )}
         </section>
       </div>
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h3 className="text-lg font-bold mb-4">Editar perfil</h3>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  defaultValue={myData?.name}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  defaultValue={myData?.email}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Foto de perfil
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <button
+                  type="button"
+                  onClick={toggleModal}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSavePhoto}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
