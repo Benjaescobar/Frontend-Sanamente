@@ -23,6 +23,7 @@ const UserProfile: React.FC = () => {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+
   };
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const UserProfile: React.FC = () => {
       setSelectedPhoto(event.target.files[0]);
     }
   };
-
+        
   const handleSavePhoto = async () => {
     if (myData && selectedPhoto) {
       try {
@@ -122,7 +123,6 @@ const UserProfile: React.FC = () => {
               <FontAwesomeIcon icon={faEdit} className="h-5 w-5" />
             </button>
             <div>
-              <p>Email: {myData?.email}</p>
             </div>
           </div>
         </section>
@@ -152,6 +152,7 @@ const UserProfile: React.FC = () => {
               ))}
             </>
           )}
+
         </section>
       </div>
       {/* Modal */}
