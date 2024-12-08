@@ -3,7 +3,7 @@ import NavBar from "@/components/navbar/NavBar";
 import Image from "next/image";
 import "../../app/UserProfile.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { getSessionsByPacientId } from "@/services/apiService";
 import dayjs from "dayjs";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
@@ -18,9 +18,9 @@ interface UserProfileData {
 
 const UserProfile: React.FC = () => {
   const [myData, setMyData] = useState<UserProfileData>();
+  const [loadingSessions, setLoadingSessions] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
-  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const email = localStorage.getItem("email") || "";
@@ -28,25 +28,27 @@ const UserProfile: React.FC = () => {
     const sub = localStorage.getItem("sub") || "";
     const picture = localStorage.getItem("picture") || "";
     const id = localStorage.getItem("id") || "";
-
+  
     setMyData({ email, name, sub, picture, id });
-  }, [uploadedPhotoUrl]);
+  }, []); // Solo se ejecuta una vez
 
   useEffect(() => {
     const fetchPacientData = async () => {
-      if (myData) {
+      if (myData && myData.id) {
+        setLoadingSessions(true)
         const response = await getSessionsByPacientId(Number(myData.id));
         setSessions(response);
+        setLoadingSessions(false)
       }
     };
-
+  
     fetchPacientData();
   }, [myData]);
 
   const handleConfirmPhoto = (url: string) => {
-    setUploadedPhotoUrl(url);
     setIsPhotoModalOpen(false);
     localStorage.setItem("picture", url);
+    window.location.reload();
   };
 
   const upcomingSessions = sessions.filter((session) =>
@@ -55,6 +57,10 @@ const UserProfile: React.FC = () => {
   const pastSessions = sessions.filter((session) =>
     dayjs(session.estado).isBefore(dayjs())
   );
+
+  if (!myData) {
+    return <div>Cargando perfil...</div>;
+  }
 
   return (
     <div>
@@ -70,7 +76,7 @@ const UserProfile: React.FC = () => {
           />
           <div className="profile-info">
             <h2>{myData?.name}</h2>
-            <h2 className="font-light text-s">{myData?.email}</h2>
+            <p className="font-light text-base text-gray-400">{myData?.email}</p>
             <button
               onClick={() => setIsPhotoModalOpen(true)}
               className="text-blue-500 hover:text-blue-700"
@@ -94,7 +100,18 @@ const UserProfile: React.FC = () => {
 
         <section className="appointments">
           <h3 className="font-bold">Mis citas</h3>
-          {upcomingSessions.length === 0 ? (
+          {loadingSessions && (
+            <div className="text-center mt-10">
+              <div className="relative inline-block">
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="text-6xl text-gray-400 mb-4 animate-spin"
+                />
+              </div>
+              <p className="text-gray-500">Cargando...</p>
+            </div>
+          )}
+          {upcomingSessions.length === 0 && !loadingSessions ? (
             <p>No tienes citas con este psicólogo.</p>
           ) : (
             <>
