@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/navigation';
 import { getComments, createComments } from '@/services/apiService';
 import { CommentProps } from '@/types/types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 dayjs.extend(relativeTime);
 
@@ -34,6 +35,7 @@ export default function ProfessionalBlogPost({
   const router = useRouter();
   const timeSincePost = dayjs(createdAt).fromNow();
   const [comments, setComments] = useState<CommentProps[]>([])
+  const { isAuthenticated } = useAuth0();
 
   useEffect(() => {
     try {
@@ -45,20 +47,6 @@ export default function ProfessionalBlogPost({
       console.error('Error fetching comments.')
     }
   }, [id]);
-
-  // useEffect(() => {
-  //   const fetchComments = async () => {
-  //   try {
-  //     const data = await getComments(id);
-  //     setComments(data);
-  //   } catch (error) {
-  //     console.error("Error fetching Therapist:", error);
-  //   }
-  //   };
-
-  //   fetchComments();
-  // }, [id]);
-
   
   return (
     <div className={'flex flex-col justify-around space-y-3 px-8 py-4 pb-10 m-5 rounded-xl ' + color}>
@@ -75,14 +63,21 @@ export default function ProfessionalBlogPost({
         <div className='text-lg font-normal whitespace-pre-line'>{contenido}</div>
         <h1 className="text-xl font-semibold">Comentarios ({comments.length}):</h1>
         <div className='flex flex-col px-5 space-y-4'>
-          {comments.length === 0 && (<div className='font-light text-lg'><i>no hay comentarios aún. Sé el primero:</i></div>)}
+          {comments.length === 0 && (
+            <div className='font-light text-lg'><i>No hay comentarios aún. Sé el primero:</i></div>
+          )}
           {comments.map((comment) => 
             <div>
               <div className='font-bold text-xl pb-1'>{comment.usuario.nombre || 'Anónimo:'}</div>
               <div className='font-light text-lg ps-4'>{comment.contenido}</div>
             </div>
           )}
-          <textarea className='text-wrap rounded text-lg font-normal p-2 pb-4' placeholder='Escribe un comentario...'/>
+          {isAuthenticated && (
+            <textarea className='text-wrap rounded text-lg font-normal p-2 pb-4' placeholder='Escribe un comentario...'/>
+          )}
+          {!isAuthenticated && (
+            <div className='font-light text-lg'><i>Debes iniciar sesión para poder realizar comentarios.</i></div>
+          )}
         </div>
         
           
