@@ -50,11 +50,12 @@ const StepForm = () => {
     setSelectedSpecialties((prev) => prev.filter((item) => item !== specialty));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const jsonData = {
       usuario_id: Number(id),
       especialidades: selectedSpecialties.join(", "),
       experiencia: Number(experiencia),
+      url_calendly: "link-falso",
       descripcion,
       ubicacion,
       precio_min: Number(minPrice),
@@ -62,8 +63,13 @@ const StepForm = () => {
     };
 
     // console.log(jsonData); // JSON listo para POST
-    createPsychologist(jsonData);
-    localStorage.setItem("tipo", "psicologo");
+    try {
+      await createPsychologist(jsonData);
+      localStorage.setItem("tipo", "psicologo");
+    } catch (error){
+      console.log("Error", error);
+    }
+    
     router.push("/");
   };
 
