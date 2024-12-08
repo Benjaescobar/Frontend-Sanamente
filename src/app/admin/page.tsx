@@ -8,10 +8,11 @@ import { ValoracionesList } from '@/components/admin/valoracionesList';
 import { UsuarioShow } from '@/components/admin/usuariosShow';
 import jsonServerProvider from 'ra-data-json-server'
 import { PsicologosShow } from '@/components/admin/psicologosShow';
+import dynamic from 'next/dynamic';
 
 const dataProvider = jsonServerProvider('https://backend-sanamente-d7ej.onrender.com')
 
-export default function AdminDashboard() {
+function AdminDashboard() {
 
   return (
     <Admin dataProvider={dataProvider}>
@@ -23,3 +24,8 @@ export default function AdminDashboard() {
     </Admin>
   );
 }
+
+export default dynamic(() => Promise.resolve(AdminDashboard), {
+  ssr: false,
+})
+
