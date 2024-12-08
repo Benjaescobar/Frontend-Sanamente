@@ -8,6 +8,7 @@ import {
   createSession,
   getTherapistById,
   getSessionsByPacientIdAndPsychologistId,
+  createReview,
 } from "@/services/apiService";
 import ReviewCard from "@/components/profile/Review";
 import { TherapistData } from "@/types/types";
@@ -109,6 +110,7 @@ export default function PsychologistProfile() {
   const handleReviewSubmit = async (rating: number, comment: string) => {
     const paciente_id = localStorage.getItem("id");
     console.log("Enviar review:", { paciente_id, id, rating, comment });
+    createReview(paciente_id, id, rating, comment);
     setIsWriteReviewModalOpen(false);
     setRating(0);
     setComment("");
@@ -130,6 +132,7 @@ export default function PsychologistProfile() {
     ...therapist,
     id_psicologo: Number(id),
   };
+  console.log(valoraciones_recibidas);
 
   // Ordenar publicaciones por fecha descendente (más reciente primero)
   const sortedPublications = [...publicaciones].sort((a, b) => {
