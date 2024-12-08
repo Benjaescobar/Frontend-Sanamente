@@ -4,7 +4,7 @@ import Image from "next/image";
 import "../../app/UserProfile.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { editUserPhoto, getSessionsByPacientId } from "@/services/apiService";
+import { getSessionsByPacientId } from "@/services/apiService";
 import dayjs from "dayjs";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
 
@@ -17,11 +17,10 @@ interface UserProfileData {
 }
 
 const UserProfile: React.FC = () => {
-  const [myData, setMyData] = useState<UserProfileData | null>(null);
+  const [myData, setMyData] = useState<UserProfileData>();
   const [sessions, setSessions] = useState<any[]>([]);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
-  const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState(false);
 
   useEffect(() => {
     const email = localStorage.getItem("email") || "";
@@ -46,26 +45,8 @@ const UserProfile: React.FC = () => {
 
   const handleConfirmPhoto = (url: string) => {
     setUploadedPhotoUrl(url);
-    setIsSaveButtonEnabled(true);
-  };
-
-  const handleSavePhoto = async () => {
-    if (uploadedPhotoUrl && myData) {
-      try {
-        await editUserPhoto(Number(myData.id), uploadedPhotoUrl);
-
-        // Actualizar la URL de la foto en el estado local
-        setMyData({ ...myData, picture: uploadedPhotoUrl });
-
-        alert("Foto guardada correctamente en el backend");
-        localStorage.setItem("picture", uploadedPhotoUrl);
-        setIsPhotoModalOpen(false);
-        setIsSaveButtonEnabled(false); // Desactivar el botón después de guardar
-      } catch (error) {
-        console.error("Error al guardar la foto:", error);
-        alert("Hubo un error al guardar la foto.");
-      }
-    }
+    setIsPhotoModalOpen(false);
+    localStorage.setItem("picture", url);
   };
 
   const upcomingSessions = sessions.filter((session) =>
@@ -105,30 +86,11 @@ const UserProfile: React.FC = () => {
         {isPhotoModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-              <ProfilePhotoUpload onUploadComplete={handleConfirmPhoto} />
-              <div className="flex justify-between mt-4">
-                <button
-                  onClick={() => setIsPhotoModalOpen(false)}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleSavePhoto}
-                  disabled={!isSaveButtonEnabled}
-                  className={`px-4 py-2 ${
-                    isSaveButtonEnabled
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  } font-medium rounded-lg`}
-                >
-                  Guardar Foto
-                </button>
-              </div>
+              <ProfilePhotoUpload onUploadComplete={handleConfirmPhoto} id={myData ? myData.id : null}/>
+              <button onClick={() => {setIsPhotoModalOpen(false)}} >Cancelar</button>
             </div>
           </div>
         )}
-
 
         <section className="appointments">
           <h3 className="font-bold">Mis citas</h3>
