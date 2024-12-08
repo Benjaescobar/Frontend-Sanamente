@@ -78,7 +78,7 @@ export default function ProfessionalBlogPost({
           {comments.length === 0 && (<div className='font-light text-lg'><i>no hay comentarios aún. Sé el primero:</i></div>)}
           {comments.map((comment) => 
             <div>
-              <div className='font-bold text-xl pb-1'>{comment.autor || 'Anónimo:'}</div>
+              <div className='font-bold text-xl pb-1'>{comment.usuario.nombre || 'Anónimo:'}</div>
               <div className='font-light text-lg ps-4'>{comment.contenido}</div>
             </div>
           )}
