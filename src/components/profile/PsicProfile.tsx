@@ -10,7 +10,6 @@ import {
 } from "@/services/apiService";
 import Content from "./Content";
 import ReviewCard from "./Review";
-import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
 import { updatePsychologist } from "../../services/apiService";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
