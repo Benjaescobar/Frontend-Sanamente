@@ -10,25 +10,42 @@ const api = axios.create({
 
 export const editUserPhoto = async (user_id: any, foto_url: string) => {
   try {
-
     const response = await api.patch(`/usuarios/${user_id}/${user_id}`, {
-      "foto": foto_url,
+      foto: foto_url,
     });
 
-    return response.data; 
+    return response.data;
   } catch (error) {
-    console.error('Error updating user photo:', error);
+    console.error("Error updating user photo:", error);
     throw error;
   }
 };
 
 export const getUserPhoto = async (user_id: any) => {
   try {
-    const response = await api.get(`/usuarios/${user_id}`)
-    return response.data.foto
-    }
-  catch (error) {
-    console.error('Error fetching data:', error);
+    const response = await api.get(`/usuarios/${user_id}`);
+    return response.data.foto;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const updatePsychologist = async (
+  psicologoId: string,
+  requesterId: string,
+  updatedData: any
+) => {
+  try {
+    console.log(updatedData);
+    const response = await api.patch(
+      `/psicologos/${psicologoId}/${psicologoId}`,
+      updatedData
+    );
+    console.log("RESPUESTA:", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating psychologist:", error);
     throw error;
   }
 };
@@ -65,13 +82,15 @@ export const getPosts = async (): Promise<Post[]> => {
   const response = await api.get(`publicaciones/`);
 
   console.log("response", response);
-  return response.data.map((post: any): Post => ({
-    contenido: post.contenido,
-    createdAt: post.createdAt,
-    nombre: post.autor.usuario.nombre,
-    imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
-    autorId: post.autor.usuario_id,
-  }));
+  return response.data.map(
+    (post: any): Post => ({
+      contenido: post.contenido,
+      createdAt: post.createdAt,
+      nombre: post.autor.usuario.nombre,
+      imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
+      autorId: post.autor.usuario_id,
+    })
+  );
 };
 
 export const getTherapistById = async (id: string): Promise<TherapistData> => {
@@ -97,24 +116,27 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         modalidad: item.modalidad || "Presencial",
         metodo: item.metodo || "Orientación Psicoanalítica",
       },
-      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map((valoracion: any): Review => ({
-        id: valoracion.id,
-        autor_id: valoracion.autor_id,
-        evaluado_id: valoracion.evaluado_id,
-        puntuacion: valoracion.puntuacion,
-        comentario: valoracion.comentario,
-        createdAt: valoracion.createdAt,
-        autor_nombre: valoracion.autor.nombre,
-        autor_foto: valoracion.autor.foto,
-      })),
-      publicaciones: item.publicaciones.map((publicacion: any): Post => ({
-        contenido: publicacion.contenido,
-        createdAt: publicacion.createdAt,
-        nombre: item.usuario.nombre,
-        imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-        autorId: item.usuario.id,
-      })),
-
+      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map(
+        (valoracion: any): Review => ({
+          id: valoracion.id,
+          autor_id: valoracion.autor_id,
+          evaluado_id: valoracion.evaluado_id,
+          puntuacion: valoracion.puntuacion,
+          comentario: valoracion.comentario,
+          createdAt: valoracion.createdAt,
+          autor_nombre: valoracion.autor.nombre,
+          autor_foto: valoracion.autor.foto,
+        })
+      ),
+      publicaciones: item.publicaciones.map(
+        (publicacion: any): Post => ({
+          contenido: publicacion.contenido,
+          createdAt: publicacion.createdAt,
+          nombre: item.usuario.nombre,
+          imageUrl: item.usuario.foto || "/images/default-profile.jpg",
+          autorId: item.usuario.id,
+        })
+      ),
     };
   } catch (error) {
     console.log("Error fetching data:", error);
@@ -306,20 +328,18 @@ export const createReview = async (
   }
 };
 
-
 export const createPost = async (autor_id: any, contenido: any) => {
-  try{
+  try {
     const response = await api.post(`/publicaciones/publicar/`, {
       contenido,
-      autor_id
-    })
+      autor_id,
+    });
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);
     throw error;
   }
-}
-
+};
 
 export interface Usuario {
   nombre: string;

@@ -22,7 +22,9 @@ export default function PsychologistProfile() {
   const params = useParams();
   const { id } = params;
 
-  const [therapistData, setTherapistData] = useState<TherapistData | null>(null);
+  const [therapistData, setTherapistData] = useState<TherapistData | null>(
+    null
+  );
   const [sessions, setSessions] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -91,7 +93,10 @@ export default function PsychologistProfile() {
   const handleCreateSessionSubmit = () => {
     const paciente_id = Number(localStorage.getItem("id"));
     const formattedDate = dayjs(selectedDate).format("YYYY-MM-DD");
-    const horafinal = dayjs(`${formattedDate} ${selectedTime}`, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm:ss");
+    const horafinal = dayjs(
+      `${formattedDate} ${selectedTime}`,
+      "YYYY-MM-DD HH:mm"
+    ).format("YYYY-MM-DD HH:mm:ss");
     if (paciente_id) {
       createSession(paciente_id, Number(id), horafinal);
     } else {
@@ -132,14 +137,14 @@ export default function PsychologistProfile() {
   });
   const averageRating =
     valoraciones_recibidas.reduce((acc, review) => acc + review.puntuacion, 0) /
-    valoraciones_recibidas.length || 0;
+      valoraciones_recibidas.length || 0;
 
   return (
     <div>
       <NavBar />
       <div className="flex pt-10 px-4 space-x-4">
         <div className="flex-1">
-          <Content {...fullTherapist} />
+          <Content {...fullTherapist} reportbutton={true} />
           <div className="flex gap-2 mt-4 ml-10">
             {valoraciones_recibidas.slice(0, 3).map((review, key) => (
               <ReviewCard key={key} reviewData={review} />
@@ -168,7 +173,8 @@ export default function PsychologistProfile() {
                 timeSincePost=""
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
-                {...post}              />
+                {...post}
+              />
             ))}
           </div>
         </div>
@@ -222,7 +228,8 @@ export default function PsychologistProfile() {
               >
                 {isOpen && (
                   <div className="space-y-2">
-                    {upcomingSessions.length === 0 && pastSessions.length === 0 ? (
+                    {upcomingSessions.length === 0 &&
+                    pastSessions.length === 0 ? (
                       <p>No tienes citas con este psicólogo.</p>
                     ) : (
                       <>
@@ -232,9 +239,7 @@ export default function PsychologistProfile() {
                             key={session.id}
                             className="bg-blue-400 text-white p-3 rounded-lg hover:bg-blue-300 hover:cursor-pointer"
                           >
-                            {dayjs(session.estado).format(
-                              "D [de] MMMM, HH:mm"
-                            )}
+                            {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
                           </div>
                         ))}
                         <h3>Sesiones pasadas</h3>
@@ -243,9 +248,7 @@ export default function PsychologistProfile() {
                             key={session.id}
                             className="bg-blue-100 text-blue-300 p-3 rounded-lg hover:bg-blue-200 hover:cursor-pointer"
                           >
-                            {dayjs(session.estado).format(
-                              "D [de] MMMM, HH:mm"
-                            )}
+                            {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
                           </div>
                         ))}
                       </>
@@ -257,8 +260,8 @@ export default function PsychologistProfile() {
           </div>
         </div>
       </div>
-        {/* Modal de Valoraciones */}
-        {isReviewModalOpen && (
+      {/* Modal de Valoraciones */}
+      {isReviewModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 p-6">
           <div className="bg-white rounded-lg max-w-3xl w-full max-h-[80vh] flex relative overflow-hidden">
             {/* Botón de cerrar */}
@@ -276,10 +279,16 @@ export default function PsychologistProfile() {
                   Información
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Aquí puedes ver las valoraciones de {therapist.nombre}. {sessions.length === 0 ? (
-                    <span>Para valorar a un psicologo debes haber tenido una sesión.</span>
+                  Aquí puedes ver las valoraciones de {therapist.nombre}.{" "}
+                  {sessions.length === 0 ? (
+                    <span>
+                      Para valorar a un psicologo debes haber tenido una sesión.
+                    </span>
                   ) : (
-                    <span>Deja tu valoracion para ayudarnos a {therapist.nombre} a mejorar.</span>
+                    <span>
+                      Deja tu valoracion para ayudarnos a {therapist.nombre} a
+                      mejorar.
+                    </span>
                   )}
                 </p>
               </div>

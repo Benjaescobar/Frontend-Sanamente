@@ -13,6 +13,7 @@ interface ContentProps {
   ubicacion: string;
   foto: string | null;
   id_psicologo: number;
+  reportbutton: boolean;
 }
 
 function Content({
@@ -25,13 +26,15 @@ function Content({
   ubicacion,
   foto,
   id_psicologo,
+  reportbutton,
 }: ContentProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportReason, setReportReason] = useState<string>("");
 
-
   const handleReportSubmit = () => {
-    console.log(`Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`);
+    console.log(
+      `Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`
+    );
     setIsReportModalOpen(false);
     setReportReason("");
     // Aquí puedes agregar la lógica para enviar el reporte a la API.
@@ -50,13 +53,15 @@ function Content({
         <div>
           <div className="justify-between items-center mb-4">
             <h3 className="text-2xl font-bold">{nombre}</h3>
-            <button
-              onClick={() => setIsReportModalOpen(true)}
-              className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
-            >
-              <FontAwesomeIcon icon={faExclamationTriangle} />
-              <span className="ml-1">Reportar</span>
-            </button>
+            {reportbutton && (
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
+              >
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+                <span className="ml-1">Reportar</span>
+              </button>
+            )}
           </div>
           <p className="text-gray-600 mt-2">{descripcion}</p>
           <div className="flex flex-wrap mt-4">
@@ -110,9 +115,13 @@ function Content({
               <option value="" disabled>
                 Seleccionar motivo...
               </option>
-              <option value="Comportamiento inapropiado">Comportamiento inapropiado</option>
+              <option value="Comportamiento inapropiado">
+                Comportamiento inapropiado
+              </option>
               <option value="Información falsa">Información falsa</option>
-              <option value="Problemas con la sesión">Problemas con la sesión</option>
+              <option value="Problemas con la sesión">
+                Problemas con la sesión
+              </option>
               <option value="Otro">Otro</option>
             </select>
             <div className="flex justify-end">
