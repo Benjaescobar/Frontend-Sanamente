@@ -12,7 +12,6 @@ import Content from "./Content";
 import ReviewCard from "./Review";
 import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
-import axios from "axios";
 import { updatePsychologist } from "../../services/apiService";
 
 const PsychologistProfile: React.FC = () => {
@@ -235,12 +234,15 @@ const PsychologistProfile: React.FC = () => {
 
     try {
       // Supongamos que `userId` es el `psicologo_id` y el `requester_id` está en `localStorage`
-      const data = await updatePsychologist(userId, userId, updatedData);
-      console.log(data);
-      alert("Datos actualizados exitosamente.");
-      closeEditModal();
+      if (userId) {
+        const data = await updatePsychologist(userId, userId, updatedData);
+        console.log(data);
+        alert("Datos actualizados exitosamente.");
+        closeEditModal();
+      }
     } catch (error) {
       alert("Ocurrió un error al actualizar los datos.");
+      throw error;
     }
   };
 
