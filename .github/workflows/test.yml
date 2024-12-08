@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:20
+    env:
+      APIPATH: ${{ secrets.APIPATH }}
+      EDGE_STORE_ACCESS_KEY: ${{ secrets.EDGE_STORE_ACCESS_KEY }}
+      EDGE_STORE_SECRET_KEY: ${{ secrets.EDGE_STORE_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v3
         with:
