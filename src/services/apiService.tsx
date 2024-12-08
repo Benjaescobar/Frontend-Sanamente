@@ -324,6 +324,16 @@ export const createPost = async (autor_id: any, contenido: any) => {
   }
 }
 
+export const getComments = async (post_id: any) => {
+  try{
+    const response = await api.get(`/comentarios/obtener/${post_id}`)
+    return response.data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
 
 export interface Usuario {
   nombre: string;
