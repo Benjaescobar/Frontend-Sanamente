@@ -10,10 +10,10 @@ import {
 } from "@/services/apiService";
 import Content from "./Content";
 import ReviewCard from "./Review";
-import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
 import { updatePsychologist } from "../../services/apiService";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
+import SimplerProfessionalBlogPost from "../feed/SimplerProfessionalBlogPost";
 
 const PsychologistProfile: React.FC = () => {
   const [therapistData, setTherapistData] = useState<TherapistData | null>(
@@ -312,12 +312,11 @@ const PsychologistProfile: React.FC = () => {
               </p>
             )}
             {publicaciones.map((post, index) => (
-              <ProfessionalBlogPost
-                redirect={true}
+              <SimplerProfessionalBlogPost
+                content={""} timeSincePost={""} redirect={true}
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
-                {...post}
-              />
+                {...post}              />
             ))}
           </div>
         </div>
