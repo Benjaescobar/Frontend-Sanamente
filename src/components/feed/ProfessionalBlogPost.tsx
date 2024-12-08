@@ -1,11 +1,11 @@
-// components/ProfessionalBlogPost.tsx
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/navigation';
-import { getComments, createComments } from '@/services/apiService';
+import { getComments, createComments, getUserPhoto } from '@/services/apiService';
 import { CommentProps } from '@/types/types';
-import { useAuth0 } from '@auth0/auth0-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComment } from '@fortawesome/free-regular-svg-icons';
 
 dayjs.extend(relativeTime);
 
@@ -13,11 +13,8 @@ interface ProfessionalBlogPostProps {
   id: number;
   contenido: string;
   createdAt: string;
-  content: string;
-  nombre: string;
-  imageUrl: string;
-  timeSincePost: string;
   color: string;
+  nombre: string;
   autorId: string;
   redirect: boolean;
 }
@@ -31,80 +28,124 @@ export default function ProfessionalBlogPost({
   autorId,
   redirect
 }: ProfessionalBlogPostProps) {
-  
-  function handleCommentSubmit(e: any) {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const contenido = formData.get('contenido');
-    const userId = localStorage.getItem('id')
-    
-    createComments(id, userId, contenido).then((result) => {
-      console.log(result);
-      window.location.reload();
-    })
-    .catch((error) => {
-      alert('Ha habido un error al crear tu comentario. Asegúrate de iniciar sesión antes de comentar.')
-    })
-  }
-
+  const [comments, setComments] = useState<CommentProps[]>([]);
+  const [authorPhoto, setAuthorPhoto] = useState<string>('images/default-profile.jpg');
+  const [showComments, setShowComments] = useState(false);
 
   const router = useRouter();
   const timeSincePost = dayjs(createdAt).fromNow();
-  const [comments, setComments] = useState<CommentProps[]>([])
-  const { isAuthenticated } = useAuth0();
+
+  useEffect(() => {
+    const fetchAuthorPhoto = async () => {
+      const photo = await getUserPhoto(autorId);
+      setAuthorPhoto(photo || 'images/default-profile.jpg');
+    };
+
+    fetchAuthorPhoto();
+  }, [autorId]);
 
   useEffect(() => {
     try {
       getComments(id).then((result) => {
         setComments(result);
-        // console.log('result:', result);
       });
-    } catch(error) {
-      console.error('Error fetching comments.')
+    } catch (error) {
+      console.error('Error fetching comments.');
+      console.log(error);
     }
   }, [id]);
-  
+
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const contenido = formData.get('contenido') as string;
+    const userId = localStorage.getItem('id');
+
+    try {
+      await createComments(id, userId, contenido);
+      setComments((prevComments) => [
+        ...prevComments,
+        { id: Date.now(), contenido, usuario: { nombre: 'Tú' } } as CommentProps,
+      ]);
+      form.reset();
+    } catch (error) {
+      alert('Ha habido un error al crear tu comentario. Asegúrate de iniciar sesión antes de comentar.');
+      console.log(error);
+    }
+  };
+
+  const toggleComments = () => setShowComments(!showComments);
+
   return (
-    <div className={'flex flex-col justify-around space-y-3 px-8 py-4 pb-10 m-5 rounded-xl ' + color}>
-        <div className='flex space-x-1'>
-            <div className='flex flex-col justify-center space-y-2'>
-              {redirect ? 
-                (<h1 className='text-red-500 text-2xl font-bold cursor-pointer' onClick={() => {router.push(`profile/${autorId}`)}}>{nombre}</h1>) 
-                : (
-                <h1 className='text-red-500 text-2xl font-bold'>{nombre}</h1>
-                )}
-                <span className='font-light text-xs'>{timeSincePost}</span>
-            </div>
+    <div className={`flex flex-col justify-around space-y-3 px-8 py-4 pb-10 m-5 rounded-xl ${color}`}>
+      <div className="flex items-center space-x-3">
+        <img
+          src={authorPhoto}
+          alt="Foto del autor"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+        <div>
+          {redirect ? (
+            <h1
+              className="text-red-500 text-2xl font-bold cursor-pointer"
+              onClick={() => router.push(`profile/${autorId}`)}
+            >
+              {nombre}
+            </h1>
+          ) : (
+            <h1 className="text-red-500 text-2xl font-bold">{nombre}</h1>
+          )}
+          <p className='font-light text-sm text-gray-400' >{timeSincePost}</p>
         </div>
-        <div className='text-lg font-normal whitespace-pre-line'>{contenido}</div>
-        <h1 className="text-xl font-semibold">Comentarios ({comments.length}):</h1>
-        <div className='flex flex-col px-5 space-y-4'>
+      </div>
+      <div className="text-lg font-normal whitespace-pre-line">{contenido}</div>
+      <button
+        onClick={toggleComments}
+        className="flex items-center justify-between w-fit text-lg"
+      >
+        <FontAwesomeIcon icon={faComment} size="lg" className='text-gray-600 font-light'/>
+        <span className='text-gray-600 font-light text-md'>({comments.length})</span>
+      </button>
+      {showComments && (
+        <div className="flex flex-col px-5 space-y-4">
           {comments.length === 0 && (
-            <div className='font-light text-lg'><i>No hay comentarios aún. Sé el primero:</i></div>
-          )}
-          {comments.map((comment) => 
-            <div>
-              <div className='font-bold text-xl pb-1'>{comment.usuario.nombre || 'Anónimo:'}</div>
-              <div className='font-light text-lg ps-4'>{comment.contenido}</div>
+            <div className="font-light text-sm">
+              <i>No hay comentarios aún. Sé el primero:</i>
             </div>
           )}
-          {true && (
-            <form method='post' onSubmit={handleCommentSubmit} className='flex flex-row space-x-3 content-between'>
-              <textarea name='contenido' className='text-wrap rounded text-lg font-normal p-2 pb-4 w-[95%]' placeholder='Escribe un comentario...'/>
-                <button type="submit">
-                  <div className='h-[100%] bg-blue-300 border-white rounded justify-center pt-3 text-lg font-light'>
-                    Publicar comentario
-                  </div>
-              </button>
-            </form>
-          )}
-          {/* {!isAuthenticated && ( */}
-          {/*   <div className='font-light text-lg'><i>Debes iniciar sesión para poder realizar comentarios.</i></div> */}
-          {/* )} */}
+          {comments.map((comment, index) => (
+            <div key={comment.id || index} className="flex items-start space-x-3">
+              <img
+                src={comment.usuario.foto || 'images/default-profile.jpg'}
+                alt="Foto del usuario"
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div>
+                <h3 className="font-regular text-base">{comment.usuario?.nombre || 'Anónimo:'}</h3>
+                <p className="font-light text-sm">{comment.contenido}</p>
+              </div>
+            </div>
+          ))}
+          <form
+            method="post"
+            onSubmit={handleCommentSubmit}
+            className="flex flex-row items-center space-x-3"
+          >
+            <textarea
+              name="contenido"
+              className="text-sm font-light rounded-xl border-gray-300 p-2 pb-4 w-[85%] focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+              placeholder="Escribe un comentario..."
+            />
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors"
+            >
+              Publicar
+            </button>
+          </form>
         </div>
-        
-          
+      )}
     </div>
   );
 }
