@@ -90,15 +90,6 @@ export const getPosts = async (): Promise<Post[]> => {
     imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
     autorId: post.autor.usuario_id,
   }));
-  return response.data.map(
-    (post: any): Post => ({
-      contenido: post.contenido,
-      createdAt: post.createdAt,
-      nombre: post.autor.usuario.nombre,
-      imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
-      autorId: post.autor.usuario_id,
-    })
-  );
 };
 
 export const getTherapistById = async (id: string): Promise<TherapistData> => {
@@ -339,6 +330,7 @@ export const createPost = async (autor_id: any, contenido: any) => {
       contenido,
       autor_id,
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);
