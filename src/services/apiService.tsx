@@ -70,6 +70,7 @@ export const getPosts = async (): Promise<Post[]> => {
 
   console.log("response", response);
   return response.data.map((post: any): Post => ({
+    id: post.id,
     contenido: post.contenido,
     createdAt: post.createdAt,
     nombre: post.autor.usuario.nombre,
@@ -112,6 +113,7 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         autor_foto: valoracion.autor.foto,
       })),
       publicaciones: item.publicaciones.map((publicacion: any): Post => ({
+        id: 0,  // hardcodeado!
         contenido: publicacion.contenido,
         createdAt: publicacion.createdAt,
         nombre: item.usuario.nombre,
@@ -327,7 +329,7 @@ export const createPost = async (autor_id: any, contenido: any) => {
 export const getComments = async (publicacion_id: any) => {
   try{
     const response = await api.get(`/comentarios/obtener/${publicacion_id}`)
-    return response.data
+    return response.data.comments
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
@@ -373,6 +375,7 @@ export interface Therapist {
 }
 
 export interface Post {
+  id: number;
   contenido: string;
   createdAt: string;
   nombre: string;
