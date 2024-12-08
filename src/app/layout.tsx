@@ -1,8 +1,8 @@
-// app/layout.tsx
-'use client'  // Asegúrate de usar "use client" para los hooks de React
+'use client'; // Asegúrate de usar "use client" para habilitar hooks en React
 
 import { ReactNode } from 'react';
-import { Auth0Provider } from '@auth0/auth0-react'; // Importa Auth0Provider
+import { Auth0Provider } from '@auth0/auth0-react';
+import { EdgeStoreProvider } from '../lib/edgestore'; // Importa el provider de EdgeStore
 import "./globals.css";
 
 const domain = 'dev-n21w3xs26ahbrrrj.us.auth0.com';
@@ -16,6 +16,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="es">
       <body>
+        {/* Anida los providers */}
         <Auth0Provider
           domain={domain}
           clientId={clientId}
@@ -23,10 +24,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
             redirect_uri: typeof window !== "undefined" ? window.location.origin : "http://localhost:3000/home",
           }}
         >
-          <main>{children}</main> {/* Aquí irá el contenido de cada página */}
+          <EdgeStoreProvider>
+            <main>{children}</main> {/* Aquí irá el contenido de cada página */}
+          </EdgeStoreProvider>
         </Auth0Provider>
       </body>
     </html>
   );
 }
-

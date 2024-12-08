@@ -144,14 +144,12 @@ export default function PsychologistProfile() {
             {valoraciones_recibidas.slice(0, 3).map((review, key) => (
               <ReviewCard key={key} reviewData={review} />
             ))}
-            {valoraciones_recibidas.length > 3 && (
-              <button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="text-gray-500 hover:text-gray-700 p-2"
-              >
-                <FontAwesomeIcon icon={faPlus} className="text-lg" />
-              </button>
-            )}
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
+              className="text-gray-500 hover:text-gray-700 p-2"
+            >
+              <FontAwesomeIcon icon={faPlus} className="text-lg" />
+            </button>
             {valoraciones_recibidas.length === 0 && (
               <p>Este usuario aún no tiene ninguna valoración</p>
             )}
@@ -278,17 +276,24 @@ export default function PsychologistProfile() {
                   Información
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Aquí puedes ver y dejar tu valoración para {therapist.nombre}
+                  Aquí puedes ver las valoraciones de {therapist.nombre}. {sessions.length === 0 ? (
+                    <span>Para valorar a un psicologo debes haber tenido una sesión.</span>
+                  ) : (
+                    <span>Deja tu valoracion para ayudarnos a {therapist.nombre} a mejorar.</span>
+                  )}
                 </p>
               </div>
               <button
-                className="bg-blue-400 text-white px-2 py-1 rounded-lg hover:bg-blue-500"
+                className={`bg-blue-400 text-white px-2 py-1 rounded-lg ${
+                  sessions.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={() => {
                   setIsReviewModalOpen(false);
                   setIsWriteReviewModalOpen(true);
                 }}
+                disabled={sessions.length === 0}
               >
-                Dejar review
+                Escribir reseña
               </button>
             </div>
 
@@ -298,7 +303,7 @@ export default function PsychologistProfile() {
               <p className="text-sm text-gray-600 mb-4">
                 Promedio de valoraciones:{" "}
                 <span className="text-yellow-500 font-bold">
-                  {averageRating.toFixed(1)} / 5
+                  {averageRating.toFixed(1)} / 5.0
                 </span>
               </p>
               <div className="space-y-4">

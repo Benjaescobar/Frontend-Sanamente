@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import NavBar from "@/components/navbar/NavBar";
-import Image from 'next/image';
-import '../../app/UserProfile.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { getSessionsByPacientId } from '@/services/apiService';
-import dayjs from 'dayjs';
+import Image from "next/image";
+import "../../app/UserProfile.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { editUserPhoto, getSessionsByPacientId } from "@/services/apiService";
+import dayjs from "dayjs";
+import ProfilePhotoUpload from "./ProfilePhotoUpload";
 
 interface UserProfileData {
   email: string;
@@ -18,71 +19,51 @@ interface UserProfileData {
 const UserProfile: React.FC = () => {
   const [myData, setMyData] = useState<UserProfileData | null>(null);
   const [sessions, setSessions] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-
-  };
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
+  const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState(false);
 
   useEffect(() => {
-    const email = localStorage.getItem('email') || '';
-    const name = localStorage.getItem('name') || '';
-    const sub = localStorage.getItem('sub') || '';
-    const picture = localStorage.getItem('picture') || '';
-    const id = localStorage.getItem('id') || '';
+    const email = localStorage.getItem("email") || "";
+    const name = localStorage.getItem("name") || "";
+    const sub = localStorage.getItem("sub") || "";
+    const picture = localStorage.getItem("picture") || "";
+    const id = localStorage.getItem("id") || "";
 
-    setMyData({
-      email,
-      name,
-      sub,
-      picture,
-      id,
-    });
-  }, []);
+    setMyData({ email, name, sub, picture, id });
+  }, [uploadedPhotoUrl]);
 
   useEffect(() => {
     const fetchPacientData = async () => {
       if (myData) {
         const response = await getSessionsByPacientId(Number(myData.id));
         setSessions(response);
-        // const foto = await getUserPhoto(Number(myData.id));
-        // // Crear un Blob a partir de los datos
-        // const byteArray = new Uint8Array(foto.data); // Convertir array a Uint8Array
-        // const blob = new Blob([byteArray], { type: "image/png" }); 
-        // console.log(blob);
-        // // Crear una URL utilizable a partir del Blob
-        // const url = URL.createObjectURL(blob);
-        // console.log(url);
-        // setImageUrl(url);
       }
     };
 
     fetchPacientData();
   }, [myData]);
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedPhoto(event.target.files[0]);
-    }
+  const handleConfirmPhoto = (url: string) => {
+    setUploadedPhotoUrl(url);
+    setIsSaveButtonEnabled(true);
   };
-        
+
   const handleSavePhoto = async () => {
-    if (myData && selectedPhoto) {
+    if (uploadedPhotoUrl && myData) {
       try {
-        const photoBlob = new Blob([selectedPhoto], { type: selectedPhoto.type });
-        // await editUserPhoto(Number(myData.id), photoBlob);
+        await editUserPhoto(Number(myData.id), uploadedPhotoUrl);
 
-        // Actualizar foto en el estado local
-        const photoURL = URL.createObjectURL(photoBlob);
-        setMyData({ ...myData, picture: photoURL });
+        // Actualizar la URL de la foto en el estado local
+        setMyData({ ...myData, picture: uploadedPhotoUrl });
 
-        alert('Foto actualizada correctamente');
-        setIsModalOpen(false);
+        alert("Foto guardada correctamente en el backend");
+        localStorage.setItem("picture", uploadedPhotoUrl);
+        setIsPhotoModalOpen(false);
+        setIsSaveButtonEnabled(false); // Desactivar el botón después de guardar
       } catch (error) {
-        console.error('Error al actualizar la foto:', error);
-        alert('Hubo un error al actualizar la foto.');
+        console.error("Error al guardar la foto:", error);
+        alert("Hubo un error al guardar la foto.");
       }
     }
   };
@@ -99,33 +80,56 @@ const UserProfile: React.FC = () => {
       <NavBar />
       <div className="profile-container">
         <section className="profile-header">
-          {/* <Image
-            src={myData?.picture ? myData.picture : "/images/default-profile.jpg"}
-            alt={''}
-            className="rounded-full p-5"
-            width={150}
-            height={150}
-          /> */}
           <Image
-            src={"/images/default-profile.jpg"}
-            alt={''}
+            src={myData?.picture || "/images/default-profile.jpg"}
+            alt="Foto de perfil"
             className="rounded-full p-5"
             width={150}
             height={150}
           />
           <div className="profile-info">
-            <h2>{myData?.name} </h2>
+            <h2>{myData?.name}</h2>
+            <h2 className="font-light text-s">{myData?.email}</h2>
             <button
-              onClick={toggleModal}
+              onClick={() => setIsPhotoModalOpen(true)}
               className="text-blue-500 hover:text-blue-700"
-              aria-label="Edit Profile"
+              aria-label="Edit Profile Picture"
             >
               <FontAwesomeIcon icon={faEdit} className="h-5 w-5" />
             </button>
-            <div>
+          </div>
+          
+        </section>
+
+        {/* Modal para cambiar foto de perfil */}
+        {isPhotoModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+              <ProfilePhotoUpload onUploadComplete={handleConfirmPhoto} />
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => setIsPhotoModalOpen(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSavePhoto}
+                  disabled={!isSaveButtonEnabled}
+                  className={`px-4 py-2 ${
+                    isSaveButtonEnabled
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  } font-medium rounded-lg`}
+                >
+                  Guardar Foto
+                </button>
+              </div>
             </div>
           </div>
-        </section>
+        )}
+
+
         <section className="appointments">
           <h3 className="font-bold">Mis citas</h3>
           {upcomingSessions.length === 0 ? (
@@ -152,66 +156,8 @@ const UserProfile: React.FC = () => {
               ))}
             </>
           )}
-
         </section>
       </div>
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h3 className="text-lg font-bold mb-4">Editar perfil</h3>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  defaultValue={myData?.name}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  defaultValue={myData?.email}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Foto de perfil
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-              <div className="flex justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={toggleModal}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSavePhoto}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Guardar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
