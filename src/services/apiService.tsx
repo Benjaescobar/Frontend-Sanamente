@@ -324,12 +324,26 @@ export const createPost = async (autor_id: any, contenido: any) => {
   }
 }
 
-export const getComments = async (post_id: any) => {
+export const getComments = async (publicacion_id: any) => {
   try{
-    const response = await api.get(`/comentarios/obtener/${post_id}`)
+    const response = await api.get(`/comentarios/obtener/${publicacion_id}`)
     return response.data
   } catch (error) {
     console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+export const createComments = async (publicacion_id: any, usuario_id: any, contenido: any) => {
+  try{
+    const response = await api.post(`/comentarios/crear/`, {
+      publicacion_id,
+      usuario_id,
+      contenido
+    })
+    return response.data
+  } catch (error) {
+    console.error("Error posting data:", error);
     throw error;
   }
 }
