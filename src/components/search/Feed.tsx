@@ -34,6 +34,7 @@ export default function Feed({
           precio_min,
           precio_max
         );
+        console.log(data);
         setLoading(false);
         setProfessionals(data);
       } catch (error) {

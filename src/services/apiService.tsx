@@ -8,18 +8,14 @@ const api = axios.create({
   },
 });
 
-export const editUserPhoto = async (user_id: any, foto_blob: Blob) => {
+export const editUserPhoto = async (user_id: any, foto_url: string) => {
   try {
-    const formData = new FormData();
-    formData.append('foto', foto_blob);
 
-    const response = await api.patch(`/usuarios/${user_id}/${user_id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await api.patch(`/usuarios/${user_id}/${user_id}`, {
+      "foto": foto_url,
     });
 
-    return response.data; // Opcional, dependiendo de si necesitas procesar la respuesta
+    return response.data; 
   } catch (error) {
     console.error('Error updating user photo:', error);
     throw error;
