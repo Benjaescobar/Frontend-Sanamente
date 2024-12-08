@@ -126,7 +126,7 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         autor_foto: valoracion.autor.foto,
       })),
       publicaciones: item.publicaciones.map((publicacion: any): Post => ({
-        id: 0,  // hardcodeado!
+        id: publicacion.id,
         contenido: publicacion.contenido,
         createdAt: publicacion.createdAt,
         nombre: item.usuario.nombre,

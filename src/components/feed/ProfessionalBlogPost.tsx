@@ -38,6 +38,7 @@ export default function ProfessionalBlogPost({
   useEffect(() => {
     const fetchAuthorPhoto = async () => {
       const photo = await getUserPhoto(autorId);
+      console.log(photo);
       setAuthorPhoto(photo || 'images/default-profile.jpg');
     };
 

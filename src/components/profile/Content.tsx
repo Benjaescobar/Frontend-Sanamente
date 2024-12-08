@@ -56,7 +56,7 @@ function Content({
     <div className="mb-4 w-full max-w-4xl ml-10">
       <div className="flex">
         <Image
-          src={foto || "/images/sergio.png"}
+          src={foto ? foto : "/images/default-profile.png"}
           alt={nombre}
           width={170}
           height={120}

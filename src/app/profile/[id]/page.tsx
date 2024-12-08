@@ -10,13 +10,13 @@ import {
   getSessionsByPacientIdAndPsychologistId,
 } from "@/services/apiService";
 import ReviewCard from "@/components/profile/Review";
-import ProfessionalBlogPost from "@/components/feed/ProfessionalBlogPost";
 import { TherapistData } from "@/types/types";
 import BookingModal from "@/components/profile/BookingModal";
 import ReviewModal from "@/components/profile/ReviewModal";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import SimplerProfessionalBlogPost from "@/components/feed/SimplerProfessionalBlogPost";
 
 export default function PsychologistProfile() {
   const params = useParams();
@@ -135,6 +135,7 @@ export default function PsychologistProfile() {
   const sortedPublications = [...publicaciones].sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Reemplaza "createdAt" con el campo correcto
   });
+  
   const averageRating =
     valoraciones_recibidas.reduce((acc, review) => acc + review.puntuacion, 0) /
       valoraciones_recibidas.length || 0;
@@ -164,15 +165,16 @@ export default function PsychologistProfile() {
           </h1>
           <div className="min-w-3/4">
             {sortedPublications.map((post, index) => (
-              <ProfessionalBlogPost
-                id={0} // hardcodeado!!
-                autorId={String(id)}
-                redirect={false}
-                nombre={therapist.nombre}
-                key={index}
-                color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
-                {...post}
-              />
+              <SimplerProfessionalBlogPost
+              autorId={String(id)}
+              redirect={false}
+              content=""
+              nombre={therapist.nombre}
+              imageUrl="/images/foto.png"
+              timeSincePost=""
+              key={index}
+              color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
+              {...post}               />
             ))}
           </div>
         </div>
