@@ -12,6 +12,7 @@ import Content from "./Content";
 import ReviewCard from "./Review";
 import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
+import ProfilePhotoUpload from "./ProfilePhotoUpload";
 
 const PsychologistProfile: React.FC = () => {
   const [therapistData, setTherapistData] = useState<TherapistData | null>(
@@ -41,6 +42,15 @@ const PsychologistProfile: React.FC = () => {
   ];
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
+
+  // FOTO
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
+  const handleConfirmPhoto = (url: string) => {
+    setUploadedPhotoUrl(url);
+    setIsPhotoModalOpen(false);
+  };
+ 
 
   useEffect(() => {
     if (isEditModalOpen && therapistData) {
@@ -196,12 +206,23 @@ const PsychologistProfile: React.FC = () => {
         <div className="flex-1">
           <div className="flex justify-between items-start">
             <Content {...fullTherapist} />
-            <button
-              onClick={openEditModal}
-              className="px-4 py-2 rounded-md bg-blue-500 text-white"
-            >
-              Editar
-            </button>
+            <div>
+              <button
+                onClick={openEditModal}
+                className="px-4 py-2 rounded-md bg-blue-500 mb-2 text-white"
+              >
+                Editar
+              </button>
+              <button
+                onClick={() => {
+                  setIsPhotoModalOpen(true);
+                }}
+                className="px-4 py-2 rounded-md bg-blue-500 text-white"
+              >
+                Cambiar foto
+              </button>
+            </div>
+         
           </div>
 
           <h1 className="text-xl font-bold mb-4 ml-10 mt-5">Mis Reseñas</h1>
@@ -293,6 +314,16 @@ const PsychologistProfile: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Modal para cambiar foto de perfil */}
+      {isPhotoModalOpen && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <ProfilePhotoUpload onUploadComplete={handleConfirmPhoto} id={userId}/>
+          <button onClick={() => {setIsPhotoModalOpen(false)}} >Cancelar</button>
+        </div>
+      </div>
+      )}
 
       {/* Modal */}
       {isModalOpen && selectedSession && (

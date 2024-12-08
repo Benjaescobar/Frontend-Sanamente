@@ -1,12 +1,15 @@
 import React, { useState, ChangeEvent } from "react";
 import { useEdgeStore } from "../../lib/edgestore";
+import { editUserPhoto } from "@/services/apiService";
 
 interface ProfilePhotoUploadProps {
   onUploadComplete: (url: string) => void;
+  id: string | null;
 }
 
 const ProfilePhotoUpload: React.FC<ProfilePhotoUploadProps> = ({
   onUploadComplete,
+  id,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [progressVal, setProgressVal] = useState<number>(0);
@@ -27,6 +30,15 @@ const ProfilePhotoUpload: React.FC<ProfilePhotoUploadProps> = ({
           },
         });
         onUploadComplete(uploadResult.url); // Notificar al componente padre
+        try {
+          await editUserPhoto(Number(id), uploadResult.url);
+  
+          alert("Cambiase tu foto");
+          localStorage.setItem("picture", uploadResult.url);
+        } catch (error) {
+          console.error("Error al guardar la foto:", error);
+          alert("Hubo un error al guardar la foto.");
+        }
       } catch (error) {
         console.error("Error al subir la foto:", error);
       }
