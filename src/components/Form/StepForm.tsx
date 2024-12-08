@@ -11,7 +11,6 @@ const StepForm = () => {
   const [nombre, setNombre] = useState<string>("");
   const [id, setID] = useState<string>("");
   const [experiencia, setExperiencia] = useState<string>("");
-  const [calendly, setCalendly] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [ubicacion, setUbicacion] = useState<string>("");
   const [minPrice, setMinPrice] = useState<string>("");
@@ -54,7 +53,6 @@ const StepForm = () => {
   const handleSubmit = () => {
     const jsonData = {
       usuario_id: Number(id),
-      url_calendly: `https://calendly.com/${calendly}`,
       especialidades: selectedSpecialties.join(", "),
       experiencia: Number(experiencia),
       descripcion,
@@ -83,11 +81,6 @@ const StepForm = () => {
         !minPrice ||
         !maxPrice
       ) {
-        alert("Por favor completa todos los campos requeridos en este paso.");
-        return;
-      }
-    } else if (step === 3) {
-      if (!descripcion || !calendly || !ubicacion) {
         alert("Por favor completa todos los campos requeridos en este paso.");
         return;
       }
@@ -298,18 +291,7 @@ const StepForm = () => {
                 className="block w-full rounded-md rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light  p-2.5"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-blue-400 dark:text-white">
-                Usuario de Calendly
-              </label>
-              <input
-                type="text"
-                value={calendly}
-                onChange={(e) => setCalendly(e.target.value)}
-                placeholder="Ejemplo: CarlosFernandez"
-                className="block w-full rounded-md rounded-md border-blue-300 placeholder-blue-300 placeholder:font-light  p-2.5"
-              />
-            </div>
+
             <div className="mb-4">
               <label className="block text-sm font-medium text-blue-400 dark:text-white">
                 Ubicación
@@ -350,9 +332,6 @@ const StepForm = () => {
             </p>
             <p>
               <strong>Descripción:</strong> {descripcion}
-            </p>
-            <p>
-              <strong>URL de Calendly:</strong> {calendly}
             </p>
             <p>
               <strong>Ubicación:</strong> {ubicacion}
