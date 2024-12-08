@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { createReview, getSessionsByPacientIdAndPsychologistId } from "@/services/apiService";
+import {
+  createReview,
+  getSessionsByPacientIdAndPsychologistId,
+} from "@/services/apiService";
 import dayjs from "dayjs";
 import ReviewModal from "@/components/profile/ReviewModal";
 
@@ -22,7 +25,9 @@ function Content({
   descripcion,
   especialidades,
   precio_min,
+  precio_max,
   experiencia,
+  ubicacion,
   foto,
   id_psicologo,
 }: ContentProps) {
@@ -34,8 +39,13 @@ function Content({
   useEffect(() => {
     const fetchSessions = async () => {
       const myId = Number(localStorage.getItem("id"));
-      const sessions = await getSessionsByPacientIdAndPsychologistId(myId, id_psicologo);
-      const filteredSessions = sessions.filter((sesion: any) => dayjs(sesion.estado).isBefore(dayjs(new Date())));
+      const sessions = await getSessionsByPacientIdAndPsychologistId(
+        myId,
+        id_psicologo
+      );
+      const filteredSessions = sessions.filter((sesion: any) =>
+        dayjs(sesion.estado).isBefore(dayjs(new Date()))
+      );
       setHadSessionsWith(filteredSessions.length > 0);
     };
     fetchSessions();
@@ -88,12 +98,22 @@ function Content({
           </div>
           <div className="grid grid-cols-4 gap-4 mt-6 text-center">
             <div>
-              <p className="font-bold text-sm text-gray-800">Precio</p>
-              <span className="font-normal text-gray-800">${precio_min}</span>
+              <p className="font-bold text-sm text-gray-800">
+                Rango de precios💰
+              </p>
+              <span className="font-normal text-gray-800">
+                ${precio_min} a ${precio_max}
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="font-bold text-sm text-gray-800">Ubicación📍</p>
+              <span className="font-normal text-gray-800">{ubicacion}</span>
             </div>
             <div>
-              <p className="font-bold text-sm text-gray-800">Años de experiencia</p>
-              <span className="font-normal text-gray-800">{experiencia}</span>
+              <p className="font-bold text-sm text-gray-800">Experiencia🧠</p>
+              <span className="font-normal text-gray-800">
+                {experiencia} años
+              </span>
             </div>
           </div>
         </div>
