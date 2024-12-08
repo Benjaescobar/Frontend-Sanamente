@@ -82,15 +82,14 @@ export const getPosts = async (): Promise<Post[]> => {
   const response = await api.get(`publicaciones/`);
 
   console.log("response", response);
-  return response.data.map(
-    (post: any): Post => ({
-      contenido: post.contenido,
-      createdAt: post.createdAt,
-      nombre: post.autor.usuario.nombre,
-      imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
-      autorId: post.autor.usuario_id,
-    })
-  );
+  return response.data.map((post: any): Post => ({
+    id: post.id,
+    contenido: post.contenido,
+    createdAt: post.createdAt,
+    nombre: post.autor.usuario.nombre,
+    imageUrl: post.autor.usuario.foto || "/images/default-profile.png",
+    autorId: post.autor.usuario_id,
+  }));
 };
 
 export const getTherapistById = async (id: string): Promise<TherapistData> => {
@@ -116,27 +115,24 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         modalidad: item.modalidad || "Presencial",
         metodo: item.metodo || "Orientación Psicoanalítica",
       },
-      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map(
-        (valoracion: any): Review => ({
-          id: valoracion.id,
-          autor_id: valoracion.autor_id,
-          evaluado_id: valoracion.evaluado_id,
-          puntuacion: valoracion.puntuacion,
-          comentario: valoracion.comentario,
-          createdAt: valoracion.createdAt,
-          autor_nombre: valoracion.autor.nombre,
-          autor_foto: valoracion.autor.foto,
-        })
-      ),
-      publicaciones: item.publicaciones.map(
-        (publicacion: any): Post => ({
-          contenido: publicacion.contenido,
-          createdAt: publicacion.createdAt,
-          nombre: item.usuario.nombre,
-          imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-          autorId: item.usuario.id,
-        })
-      ),
+      valoraciones_recibidas: item.usuario.valoraciones_recibidas.map((valoracion: any): Review => ({
+        id: valoracion.id,
+        autor_id: valoracion.autor_id,
+        evaluado_id: valoracion.evaluado_id,
+        puntuacion: valoracion.puntuacion,
+        comentario: valoracion.comentario,
+        createdAt: valoracion.createdAt,
+        autor_nombre: valoracion.autor.nombre,
+        autor_foto: valoracion.autor.foto,
+      })),
+      publicaciones: item.publicaciones.map((publicacion: any): Post => ({
+        id: 0,  // hardcodeado!
+        contenido: publicacion.contenido,
+        createdAt: publicacion.createdAt,
+        nombre: item.usuario.nombre,
+        imageUrl: item.usuario.foto || "/images/default-profile.jpg",
+        autorId: item.usuario.id,
+      })),
     };
   } catch (error) {
     console.log("Error fetching data:", error);
@@ -334,12 +330,38 @@ export const createPost = async (autor_id: any, contenido: any) => {
       contenido,
       autor_id,
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error posting data:", error);
     throw error;
   }
-};
+}
+
+export const getComments = async (publicacion_id: any) => {
+  try{
+    const response = await api.get(`/publicaciones/${publicacion_id}`)
+    return response.data.comentarios
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+export const createComments = async (publicacion_id: any, usuario_id: any, contenido: any) => {
+  try{
+    const response = await api.post(`/comentarios/crear/`, {
+      publicacion_id,
+      usuario_id,
+      contenido
+    })
+    return response.data
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error;
+  }
+}
+
 
 export interface Usuario {
   nombre: string;
@@ -365,6 +387,7 @@ export interface Therapist {
 }
 
 export interface Post {
+  id: number;
   contenido: string;
   createdAt: string;
   nombre: string;

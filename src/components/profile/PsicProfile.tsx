@@ -314,8 +314,6 @@ const PsychologistProfile: React.FC = () => {
             {publicaciones.map((post, index) => (
               <ProfessionalBlogPost
                 redirect={true}
-                content=""
-                timeSincePost=""
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
                 {...post}

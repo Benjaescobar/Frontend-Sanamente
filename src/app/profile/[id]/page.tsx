@@ -165,12 +165,10 @@ export default function PsychologistProfile() {
           <div className="min-w-3/4">
             {sortedPublications.map((post, index) => (
               <ProfessionalBlogPost
+                id={0} // hardcodeado!!
                 autorId={String(id)}
                 redirect={false}
-                content=""
                 nombre={therapist.nombre}
-                imageUrl="/images/foto.png"
-                timeSincePost=""
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
                 {...post}
