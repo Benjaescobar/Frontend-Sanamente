@@ -31,6 +31,23 @@ export default function ProfessionalBlogPost({
   autorId,
   redirect
 }: ProfessionalBlogPostProps) {
+  
+  function handleCommentSubmit(e: any) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const contenido = formData.get('contenido');
+    const userId = localStorage.getItem('id')
+    
+    createComments(id, userId, contenido).then((result) => {
+      console.log(result);
+      window.location.reload();
+    })
+    .catch((error) => {
+      alert('Ha habido un error al crear tu comentario. Asegúrate de iniciar sesión antes de comentar.')
+    })
+  }
+
 
   const router = useRouter();
   const timeSincePost = dayjs(createdAt).fromNow();
@@ -41,7 +58,7 @@ export default function ProfessionalBlogPost({
     try {
       getComments(id).then((result) => {
         setComments(result);
-        console.log('result:', result);
+        // console.log('result:', result);
       });
     } catch(error) {
       console.error('Error fetching comments.')
@@ -72,12 +89,19 @@ export default function ProfessionalBlogPost({
               <div className='font-light text-lg ps-4'>{comment.contenido}</div>
             </div>
           )}
-          {isAuthenticated && (
-            <textarea className='text-wrap rounded text-lg font-normal p-2 pb-4' placeholder='Escribe un comentario...'/>
+          {true && (
+            <form method='post' onSubmit={handleCommentSubmit} className='flex flex-row space-x-3 content-between'>
+              <textarea name='contenido' className='text-wrap rounded text-lg font-normal p-2 pb-4 w-[95%]' placeholder='Escribe un comentario...'/>
+                <button type="submit">
+                  <div className='h-[100%] bg-blue-300 border-white rounded justify-center pt-3 text-lg font-light'>
+                    Publicar comentario
+                  </div>
+              </button>
+            </form>
           )}
-          {!isAuthenticated && (
-            <div className='font-light text-lg'><i>Debes iniciar sesión para poder realizar comentarios.</i></div>
-          )}
+          {/* {!isAuthenticated && ( */}
+          {/*   <div className='font-light text-lg'><i>Debes iniciar sesión para poder realizar comentarios.</i></div> */}
+          {/* )} */}
         </div>
         
           
