@@ -34,7 +34,7 @@ export default function NavBar() {
       localStorage.setItem("email", user.email || "");
       localStorage.setItem("name", user.name || "");
       localStorage.setItem("sub", user.sub || "");
-      localStorage.setItem("picture", user.picture || "");
+      localStorage.setItem("picture", "");
       const saveUser = async () => {
         if (isAuthenticated && user) {
           console.log(user);
@@ -59,8 +59,8 @@ export default function NavBar() {
                 const userData = await getUserByEmail(
                   user.email ? user.email : ""
                 );
+                localStorage.setItem("picture", userData.foto);
                 localStorage.setItem("id", userData.id);
-                console.log(userData);
                 localStorage.setItem("tipo", userData.tipo);
               } else {
                 console.error(
