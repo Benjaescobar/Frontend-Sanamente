@@ -1,5 +1,5 @@
 "use client"
-import { Admin, Resource, ListGuesser, ShowGuesser } from 'react-admin';
+import { Admin, Resource, ShowGuesser } from 'react-admin';
 import { PsicologoList } from '@/components/admin/psicologosList';
 import { PublicacionesList } from '@/components/admin/publicacionesList';
 import { UsuariosList } from '@/components/admin/usuariosList';

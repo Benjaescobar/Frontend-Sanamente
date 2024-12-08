@@ -1,4 +1,4 @@
-import { Datagrid, DateField, List, NumberField, ReferenceField, TextField } from 'react-admin';
+import { Datagrid, DateField, List, ReferenceField, TextField } from 'react-admin';
 
 export const PublicacionesList = () => (
     <List>
