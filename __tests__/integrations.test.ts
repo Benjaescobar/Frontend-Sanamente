@@ -1,18 +1,14 @@
 import '@testing-library/jest-dom';
-import { http } from 'msw';
-import { setupServer } from 'msw/node';
 import axios from 'axios';
 import { api, getPosts } from "@/services/apiService";
 
-const API_URL = "https://backend-sanamente-d7ej.onrender.com";
-
-const server = setupServer();
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+jest.spyOn(api, 'get').mockImplementation(jest.fn());
 
 describe("getPosts", () => {
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it("deberia buscar posts y retornar info relevante", async () => {
     const mockApiResponse = {
@@ -59,13 +55,12 @@ describe("getPosts", () => {
       ],
     };
 
-    server.use(
-        http.get(`${API_URL}/data`, (params) => {
-          return res(ctx.json(mockApiResponse));
-        })
-      );
+    (api.get as jest.Mock).mockResolvedValue(mockApiResponse);
 
     const result = await getPosts();
+
+    expect(api.get).toHaveBeenCalledWith('publicaciones/');
+    expect(api.get).toHaveBeenCalledTimes(1);
 
     expect(result).toEqual([
         {
