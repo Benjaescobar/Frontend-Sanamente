@@ -8,6 +8,8 @@ import {
   createSession,
   getTherapistById,
   getSessionsByPacientIdAndPsychologistId,
+  createReview,
+  getUserById,
 } from "@/services/apiService";
 import ReviewCard from "@/components/profile/Review";
 import { TherapistData } from "@/types/types";
@@ -106,9 +108,47 @@ export default function PsychologistProfile() {
     setIsBookingOpen(false);
   };
 
+
+  const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState<any>(null);
+
+  const openModal = (session: any) => {
+    setSelectedSession(session);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedSession(null);
+  };
+
+  const [userData, setUserData] = useState<{
+    nombre: string;
+    email: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (selectedSession) {
+      console.log("Selected Session:", selectedSession);
+      const fetchUserData = async () => {
+        try {
+          const user = await getUserById(selectedSession.paciente_id);
+          console.log("User Data:", user);
+          setUserData({ nombre: user.nombre, email: user.email });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          setUserData(null);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [selectedSession]);
+
   const handleReviewSubmit = async (rating: number, comment: string) => {
     const paciente_id = localStorage.getItem("id");
     console.log("Enviar review:", { paciente_id, id, rating, comment });
+    createReview(paciente_id, id, rating, comment);
     setIsWriteReviewModalOpen(false);
     setRating(0);
     setComment("");
@@ -130,6 +170,7 @@ export default function PsychologistProfile() {
     ...therapist,
     id_psicologo: Number(id),
   };
+  console.log(valoraciones_recibidas);
 
   // Ordenar publicaciones por fecha descendente (más reciente primero)
   const sortedPublications = [...publicaciones].sort((a, b) => {
@@ -237,6 +278,7 @@ export default function PsychologistProfile() {
                         {upcomingSessions.map((session) => (
                           <div
                             key={session.id}
+                            onClick={() => openModal(session)}
                             className="bg-blue-400 text-white p-3 rounded-lg hover:bg-blue-300 hover:cursor-pointer"
                           >
                             {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
@@ -246,6 +288,7 @@ export default function PsychologistProfile() {
                         {pastSessions.map((session) => (
                           <div
                             key={session.id}
+                            onClick={() => openModal(session)}
                             className="bg-blue-100 text-blue-300 p-3 rounded-lg hover:bg-blue-200 hover:cursor-pointer"
                           >
                             {dayjs(session.estado).format("D [de] MMMM, HH:mm")}
@@ -261,6 +304,43 @@ export default function PsychologistProfile() {
         </div>
       </div>
       {/* Modal de Valoraciones */}
+
+       {/* Modal */}
+       {isModalOpen && selectedSession && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
+            {/* Botón de cerrar */}
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+            >
+              ✕
+            </button>
+            <h2 className="text-xl font-bold mb-4">Detalles de la Sesión</h2>
+            <p>
+              <strong>📅 Fecha:</strong>{" "}
+              {dayjs(selectedSession.estado).format("D [de] MMMM, YYYY")}
+            </p>
+            <p>
+              <strong>⏰ Hora:</strong>{" "}
+              {dayjs(selectedSession.estado).format("HH:mm")}
+            </p>
+            {userData ? (
+              <>
+                <p>
+                  <strong>👤 Paciente:</strong> {userData.nombre}
+                </p>
+                <p>
+                  <strong>📬 Email:</strong> {userData.email}
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-500">Cargando datos del paciente...</p>
+            )}
+          </div>
+        </div>
+      )}
+
       {isReviewModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 p-6">
           <div className="bg-white rounded-lg max-w-3xl w-full max-h-[80vh] flex relative overflow-hidden">

@@ -13,7 +13,7 @@ export const editUserPhoto = async (user_id: any, foto_url: string) => {
     const response = await api.patch(`/usuarios/${user_id}/${user_id}`, {
       foto: foto_url,
     });
-
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error updating user photo:", error);
@@ -24,6 +24,7 @@ export const editUserPhoto = async (user_id: any, foto_url: string) => {
 export const getUserPhoto = async (user_id: any) => {
   try {
     const response = await api.get(`/usuarios/${user_id}`);
+    console.log(response);
     return response.data.foto;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -209,7 +210,7 @@ export const filterTherapist = async (
     );
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error;
+    return []
   }
 };
 

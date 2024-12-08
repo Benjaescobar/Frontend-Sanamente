@@ -1,22 +1,37 @@
 // components/Review.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { getUserPhoto } from "@/services/apiService";
 
 interface ReviewData {
   autor_nombre: string;
+  autor_id: number;
   createdAt: string;
   puntuacion: number;
   comentario: string;
 }
 
 function ReviewCard({ reviewData }: { reviewData: ReviewData }) {
-  const { autor_nombre, createdAt, puntuacion, comentario } = reviewData;
+  const { autor_nombre, createdAt, puntuacion, comentario, autor_id } = reviewData;
+  const [photo, setPhoto] = useState("/images/default-profile.jpg");
+
+  useEffect(() => {
+    const fetchPhoto = async () => {
+        const photo = await getUserPhoto(Number(autor_id));
+        console.log("Response: ", photo);
+        console.log("Response: ", autor_id);
+        setPhoto(photo ? photo : "/images/default-profile.jpg");
+    }
+    fetchPhoto();
+    
+  }, [autor_id])
+
   return (
     <div className="border border-gray-300 rounded-xl p-4 w-full max-w-md shadow-sm">
       <div className="flex items-start">
         <div className="mr-3">
           <Image
-            src="/images/default-profile.jpg" // Ruta de la imagen del usuario
+            src={photo ? photo : "images/default-profile.jpg"} // Ruta de la imagen del usuario
             alt="Usuario"
             width={40}
             height={40}

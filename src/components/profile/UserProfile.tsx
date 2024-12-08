@@ -48,7 +48,7 @@ const UserProfile: React.FC = () => {
   const handleConfirmPhoto = (url: string) => {
     setIsPhotoModalOpen(false);
     localStorage.setItem("picture", url);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const upcomingSessions = sessions.filter((session) =>
@@ -112,7 +112,7 @@ const UserProfile: React.FC = () => {
             </div>
           )}
           {upcomingSessions.length === 0 && !loadingSessions ? (
-            <p>No tienes citas con este psicólogo.</p>
+            <p>No tienes ninguna cita. Puedes buscar un psicologo para agendar <a href="/search" className="text-blue-500">aquí</a>.</p>
           ) : (
             <>
               <h3 className="font-light">Próximas sesiones</h3>
