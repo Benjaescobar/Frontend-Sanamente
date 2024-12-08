@@ -45,12 +45,10 @@ const PsychologistProfile: React.FC = () => {
 
   // FOTO
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
-  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
   const handleConfirmPhoto = (url: string) => {
-    setUploadedPhotoUrl(url);
+    console.log(url);
     setIsPhotoModalOpen(false);
   };
- 
 
   useEffect(() => {
     if (isEditModalOpen && therapistData) {

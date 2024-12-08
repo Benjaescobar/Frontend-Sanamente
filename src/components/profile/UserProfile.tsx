@@ -4,7 +4,7 @@ import Image from "next/image";
 import "../../app/UserProfile.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { editUserPhoto, getSessionsByPacientId } from "@/services/apiService";
+import { getSessionsByPacientId } from "@/services/apiService";
 import dayjs from "dayjs";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
 
