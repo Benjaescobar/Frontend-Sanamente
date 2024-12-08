@@ -55,10 +55,20 @@ export interface TherapistData {
 }
 
 export interface ProfessionalBlogPostProps {
+  id: number;
   contenido: string;
   createdAt: string;
   nombre: string;
   imageUrl: string;
   color?: string;
   autorId: string;
+}
+
+export interface CommentProps {
+  id: number;
+  autor_id: number;
+  publicacion_id: number;
+  contenido: string;
+  createdAt: string;
+  updatedAt: string;
 }
