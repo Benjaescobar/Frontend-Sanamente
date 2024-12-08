@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
@@ -30,6 +30,7 @@ function Content({
 }: ContentProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportReason, setReportReason] = useState<string>("");
+  const [isMe, setIsMe] = useState(false);
 
   const handleReportSubmit = () => {
     console.log(
@@ -38,6 +39,17 @@ function Content({
     setIsReportModalOpen(false);
     setReportReason("");
     // Aquí puedes agregar la lógica para enviar el reporte a la API.
+  };
+
+  useEffect(() => {
+    const myId = localStorage.getItem('id');
+    if (Number(myId) == id_psicologo){
+      setIsMe(true);
+    }
+  })
+
+  const formatCLP = (amount: number) => {
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
   };
 
   return (
@@ -53,7 +65,7 @@ function Content({
         <div>
           <div className="justify-between items-center mb-4">
             <h3 className="text-2xl font-bold">{nombre}</h3>
-            {reportbutton && (
+            {(reportbutton && !isMe) && (
               <button
                 onClick={() => setIsReportModalOpen(true)}
                 className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
@@ -84,7 +96,7 @@ function Content({
                 Rango de precios💰
               </p>
               <span className="font-normal text-gray-800">
-                ${precio_min} a ${precio_max}
+                {formatCLP(precio_min)} a {formatCLP(precio_max)}
               </span>
             </div>
             <div className="flex flex-col items-center">
