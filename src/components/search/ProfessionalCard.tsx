@@ -26,6 +26,12 @@ export default function ProfessionalCard({
   ubicacion,
   foto,
 }: ProfessionalCardProps) {
+
+  const formatCLP = (amount: number) => {
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
+  };
+  
+
   return (
     <div className="p-8 mb-4 bg-white rounded-xl shadow-md border border-gray-200 w-full">
       <div className="flex">
@@ -64,7 +70,7 @@ export default function ProfessionalCard({
               Rango de precios💰
             </p>
             <span className="font-normal text-gray-800">
-              ${precio_min} a ${precio_max}
+              {formatCLP(precio_min)} a {formatCLP(precio_max)}
             </span>
           </div>
 
@@ -90,3 +96,4 @@ export default function ProfessionalCard({
     </div>
   );
 }
+

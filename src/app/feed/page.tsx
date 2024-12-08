@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import NavBar from "@/components/navbar/NavBar";
 import React, { useEffect, useState } from "react";
 import ProfessionalBlogPost from "@/components/feed/ProfessionalBlogPost";
@@ -9,29 +9,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function FeedPosts() {
-  // Asegura que `publicaciones` sea del tipo `ProfessionalBlogPostProps[]`
   const [publicaciones, setPublicaciones] = useState<ProfessionalBlogPostProps[]>([]);
-  const [psicologo, setPsicologo] = useState(false)
+  const [psicologo, setPsicologo] = useState(false);
   const [loading, setLoading] = useState(false);
   const colorClass: string[] = ["bg-celeste", "bg-amarillo"];
 
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const data = await getPosts();
+      setPublicaciones(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const data = await getPosts();
-        setPublicaciones(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-   const tipo = localStorage.getItem('tipo');
-   if (tipo == "psicologo") {
-    setPsicologo(true);
-   } else {
-    setPsicologo(false);
-   }
+    const tipo = localStorage.getItem("tipo");
+    setPsicologo(tipo === "psicologo");
     fetchPosts();
   }, []);
 
@@ -48,23 +45,24 @@ export default function FeedPosts() {
           </div>
           <p className="text-gray-500">Cargando...</p>
         </div>
-      ) :
-      (
-      <div className="px-[15%] py-5 font-semibold text-2xl">
-              Feed
-              <div className="min-w-3/4">
-              {psicologo && (
-                <CreatePost />
-              )}
-                {publicaciones.map((post, index) => (
-                  <ProfessionalBlogPost
-                    content={""} timeSincePost={""} key={index}
-                    redirect={true}
-                    color={colorClass[index % 2]}
-                    {...post}            />
-                ))}
+      ) : (
+        <div className="px-[15%] py-5 font-semibold text-2xl">
+          Feed
+          <div className="min-w-3/4">
+            {psicologo && (
+              <CreatePost onPostCreated={fetchPosts} />
+            )}
+            {publicaciones.map((post, index) => (
+              <ProfessionalBlogPost
+                key={index}
+                redirect={true}
+                color={colorClass[index % 2]}
+                {...post}
+              />
+            ))}
           </div>
-        </div>)}
-      </div>
+        </div>
+      )}
+    </div>
   );
 }

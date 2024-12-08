@@ -59,6 +59,7 @@ export default function NavBar() {
                 const userData = await getUserByEmail(
                   user.email ? user.email : ""
                 );
+                localStorage.setItem("name", userData.nombre);
                 localStorage.setItem("picture", userData.foto);
                 localStorage.setItem("id", userData.id);
                 localStorage.setItem("tipo", userData.tipo);
@@ -146,9 +147,6 @@ export default function NavBar() {
 
       {/* Sección derecha */}
       <div className="flex items-center">
-        <Link href="" className="mx-4 rounded-xl px-3 py-1 text-gray-700">
-          Contacto
-        </Link>
         {authStatus ? (
           <div className="relative" ref={dropdownRef}>
             <button
@@ -156,13 +154,15 @@ export default function NavBar() {
               className="mx-4 flex items-center space-x-2"
             >
               {profilePicture ? (
-                <Image
-                  src={profilePicture}
-                  width={40}
-                  height={40}
-                  alt="Foto de perfil"
-                  className="rounded-full"
-                />
+                <div className="flex items-center justify-center w-[40px] h-[40px] rounded-full overflow-hidden">
+                  <Image
+                    src={profilePicture}
+                    width={40}
+                    height={40}
+                    alt="Foto de perfil"
+                    className=""
+                  />
+                </div>
               ) : (
                 <FontAwesomeIcon
                   icon={faUser}

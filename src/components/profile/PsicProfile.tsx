@@ -12,6 +12,7 @@ import Content from "./Content";
 import ReviewCard from "./Review";
 import ProfessionalBlogPost from "../feed/ProfessionalBlogPost";
 import dayjs from "dayjs";
+import { updatePsychologist } from "../../services/apiService";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
 
 const PsychologistProfile: React.FC = () => {
@@ -196,6 +197,63 @@ const PsychologistProfile: React.FC = () => {
     setSelectedSession(null);
   };
 
+  const handleSave = async () => {
+    // Validaciones
+    if (!descripcion.trim()) {
+      alert("La descripción no puede estar vacía.");
+      return;
+    }
+    if (!especialidades.length) {
+      alert("Debe seleccionar al menos una especialidad.");
+      return;
+    }
+    if (!ubicacion.trim()) {
+      alert("La ubicación no puede estar vacía.");
+      return;
+    }
+    if (!experiencia || isNaN(Number(experiencia)) || Number(experiencia) < 0) {
+      alert("Los años de experiencia deben ser un número entero positivo.");
+      return;
+    }
+    if (!minPrice || isNaN(Number(minPrice)) || Number(minPrice) < 0) {
+      alert("El precio mínimo debe ser un número entero positivo.");
+      return;
+    }
+    if (
+      !maxPrice ||
+      isNaN(Number(maxPrice)) ||
+      Number(maxPrice) < Number(minPrice)
+    ) {
+      alert(
+        "El precio máximo debe ser un número entero mayor o igual al mínimo."
+      );
+      return;
+    }
+
+    // Datos a enviar
+    const updatedData = {
+      descripcion,
+      especialidades: especialidades.join(", "),
+      experiencia: parseInt(experiencia, 10),
+      ubicacion,
+      precio_min: parseInt(minPrice, 10),
+      precio_max: parseInt(maxPrice, 10),
+    };
+
+    try {
+      // Supongamos que `userId` es el `psicologo_id` y el `requester_id` está en `localStorage`
+      if (userId) {
+        const data = await updatePsychologist(userId, userId, updatedData);
+        console.log(data);
+        alert("Datos actualizados exitosamente.");
+        closeEditModal();
+      }
+    } catch (error) {
+      alert("Ocurrió un error al actualizar los datos.");
+      throw error;
+    }
+  };
+
   return (
     <div>
       <NavBar />
@@ -203,7 +261,7 @@ const PsychologistProfile: React.FC = () => {
         {/* Columna Izquierda: Contenido Principal */}
         <div className="flex-1">
           <div className="flex justify-between items-start">
-            <Content {...fullTherapist} />
+            <Content {...fullTherapist} reportbutton={false} />
             <div>
               <button
                 onClick={openEditModal}
@@ -220,7 +278,6 @@ const PsychologistProfile: React.FC = () => {
                 Cambiar foto
               </button>
             </div>
-         
           </div>
 
           <h1 className="text-xl font-bold mb-4 ml-10 mt-5">Mis Reseñas</h1>
@@ -257,8 +314,6 @@ const PsychologistProfile: React.FC = () => {
             {publicaciones.map((post, index) => (
               <ProfessionalBlogPost
                 redirect={true}
-                content=""
-                timeSincePost=""
                 key={index}
                 color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
                 {...post}
@@ -469,7 +524,7 @@ const PsychologistProfile: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={closeEditModal}
+              onClick={handleSave}
               className="px-4 py-2 mt-4 rounded-md bg-green-500 text-white"
             >
               Guardar
