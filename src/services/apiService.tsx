@@ -112,7 +112,7 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         createdAt: publicacion.createdAt,
         nombre: item.usuario.nombre,
         imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-        autorId: item.usuario.id,
+        autorId: item.usuario_id,
       })),
 
     };
