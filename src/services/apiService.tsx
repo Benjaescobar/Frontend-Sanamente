@@ -1,7 +1,7 @@
 // src/services/apiService.ts
 import axios from "axios";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "https://backend-sanamente-d7ej.onrender.com",
   headers: {
     "Content-Type": "application/json",
