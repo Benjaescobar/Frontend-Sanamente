@@ -66,6 +66,7 @@ export interface ProfessionalBlogPostProps {
 
 export interface CommentProps {
   id: number;
+  autor: string;
   autor_id: number;
   publicacion_id: number;
   contenido: string;

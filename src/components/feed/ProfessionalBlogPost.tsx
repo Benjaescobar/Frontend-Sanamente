@@ -74,10 +74,16 @@ export default function ProfessionalBlogPost({
         </div>
         <div className='text-lg font-normal whitespace-pre-line'>{contenido}</div>
         <h1 className="text-xl font-semibold">Comentarios ({comments.length}):</h1>
-        {comments.length === 0 && (<div className='font-light text-lg'>no hay comentarios aún. Sé el primero:</div>)}
-        {comments.map((comment) => 
-          <div className='font-medium text-xl'>{comment.contenido}</div>
-        )}
+        <div className='flex flex-col px-5 space-y-4'>
+          {comments.length === 0 && (<div className='font-light text-lg'><i>no hay comentarios aún. Sé el primero:</i></div>)}
+          {comments.map((comment) => 
+            <div>
+              <div className='font-bold text-xl pb-1'>{comment.autor || 'Anónimo:'}</div>
+              <div className='font-light text-lg ps-4'>{comment.contenido}</div>
+            </div>
+          )}
+          <textarea className='text-wrap rounded text-lg font-normal p-2 pb-4' placeholder='Escribe un comentario...'/>
+        </div>
         
           
     </div>
