@@ -1,11 +1,9 @@
-// components/ProfessionalCard.tsx
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { createReview, getSessionsByPacientIdAndPsychologistId } from "@/services/apiService";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { getSessionsByPacientIdAndPsychologistId } from "@/services/apiService";
 import dayjs from "dayjs";
-import ReviewModal from "@/components/profile/ReviewModal";
 
 interface ContentProps {
   nombre: string;
@@ -26,27 +24,27 @@ function Content({
   foto,
   id_psicologo,
 }: ContentProps) {
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [rating, setRating] = useState<number>(0);
-  const [comment, setComment] = useState<string>("");
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [hasSessionsWith, setHadSessionsWith] = useState(false);
+  const [reportReason, setReportReason] = useState<string>("");
 
   useEffect(() => {
     const fetchSessions = async () => {
       const myId = Number(localStorage.getItem("id"));
       const sessions = await getSessionsByPacientIdAndPsychologistId(myId, id_psicologo);
-      const filteredSessions = sessions.filter((sesion: any) => dayjs(sesion.estado).isBefore(dayjs(new Date())));
+      const filteredSessions = sessions.filter((sesion: any) =>
+        dayjs(sesion.estado).isBefore(dayjs(new Date()))
+      );
       setHadSessionsWith(filteredSessions.length > 0);
     };
     fetchSessions();
   }, [id_psicologo]);
 
-  const handleReviewSubmit = async (rating: number, comment: string) => {
-    const myId = localStorage.getItem("id");
-    await createReview(myId, id_psicologo, rating, comment);
-    setIsReviewModalOpen(false);
-    setRating(0);
-    setComment("");
+  const handleReportSubmit = () => {
+    console.log(`Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`);
+    setIsReportModalOpen(false);
+    setReportReason("");
+    // Aquí puedes agregar la lógica para enviar el reporte a la API.
   };
 
   return (
@@ -62,14 +60,13 @@ function Content({
         <div>
           <div className="justify-between items-center mb-4">
             <h3 className="text-2xl font-bold">{nombre}</h3>
-            {hasSessionsWith && (
-              <button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
-              >
-                <FontAwesomeIcon icon={faStar} /> Deja tu valoración!
-              </button>
-            )}
+            <button
+              onClick={() => setIsReportModalOpen(true)}
+              className="text-gray-400 hover:text-gray-500 text-l items-center flex justify-between"
+            >
+              <FontAwesomeIcon icon={faExclamationTriangle} />
+              <span className="ml-1">Reportar</span>
+            </button>
           </div>
           <p className="text-gray-600 mt-2">{descripcion}</p>
           <div className="flex flex-wrap mt-4">
@@ -99,16 +96,43 @@ function Content({
         </div>
       </div>
 
-      {/* Usar el componente ReviewModal */}
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-        onSubmit={handleReviewSubmit}
-        rating={rating}
-        setRating={setRating}
-        comment={comment}
-        setComment={setComment}
-      />
+      {/* Modal para Reportar */}
+      {isReportModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 className="text-xl font-bold mb-4">Reportar psicólogo</h3>
+            <p className="mb-4">Selecciona un motivo para reportar:</p>
+            <select
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
+            >
+              <option value="" disabled>
+                Seleccionar motivo...
+              </option>
+              <option value="Comportamiento inapropiado">Comportamiento inapropiado</option>
+              <option value="Información falsa">Información falsa</option>
+              <option value="Problemas con la sesión">Problemas con la sesión</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setIsReportModalOpen(false)}
+                className="mr-4 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleReportSubmit}
+                disabled={!reportReason}
+                className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 disabled:bg-red-300"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

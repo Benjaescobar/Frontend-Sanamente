@@ -4,7 +4,7 @@ import Image from 'next/image';
 import '../../app/UserProfile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { getSessionsByPacientId } from '@/services/apiService';
+import { editUserPhoto, getSessionsByPacientId } from '@/services/apiService';
 import dayjs from 'dayjs';
 
 interface UserProfileData {
@@ -72,7 +72,7 @@ const UserProfile: React.FC = () => {
     if (myData && selectedPhoto) {
       try {
         const photoBlob = new Blob([selectedPhoto], { type: selectedPhoto.type });
-        // await editUserPhoto(Number(myData.id), photoBlob);
+        await editUserPhoto(Number(myData.id), photoBlob);
 
         // Actualizar foto en el estado local
         const photoURL = URL.createObjectURL(photoBlob);

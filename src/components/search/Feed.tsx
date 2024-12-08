@@ -3,7 +3,7 @@ import ProfessionalCard from "./ProfessionalCard";
 import { filterTherapist } from "@/services/apiService";
 import { Professional } from "../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFrown } from "@fortawesome/free-solid-svg-icons";
+import { faFrown, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface FeedProps {
   especialidad: string;
@@ -21,10 +21,12 @@ export default function Feed({
   precio_max,
 }: FeedProps) {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const data = await filterTherapist(
           especialidad,
           experiencia,
@@ -32,7 +34,7 @@ export default function Feed({
           precio_min,
           precio_max
         );
-        console.log("Filtered Data:", data);
+        setLoading(false);
         setProfessionals(data);
       } catch (error) {
         console.error("Error fetching professionals:", error);
@@ -44,7 +46,18 @@ export default function Feed({
 
   return (
     <div className="min-w-3/4">
-      {professionals.length === 0 ? (
+      {loading && (
+        <div className="text-center mt-10">
+          <div className="relative inline-block">
+            <FontAwesomeIcon
+              icon={faSpinner}
+              className="text-6xl text-gray-400 mb-4 animate-spin"
+            />
+          </div>
+          <p className="text-gray-500">Cargando...</p>
+        </div>
+      )}
+      {(professionals.length === 0 && !loading) ? (
         <div className="text-center mt-10">
           <div className="relative inline-block">
             <FontAwesomeIcon
