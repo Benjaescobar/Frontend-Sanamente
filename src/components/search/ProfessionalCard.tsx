@@ -8,6 +8,7 @@ interface ProfessionalCardProps {
   descripcion: string;
   especialidades: string;
   precio_min: number;
+  precio_max: number;
   experiencia: number;
   ubicacion: string;
   url_calendly: string;

@@ -15,7 +15,9 @@ interface ContentProps {
   descripcion: string;
   especialidades: string;
   precio_min: number;
+  precio_max: number;
   experiencia: number;
+  ubicacion: string;
   foto: string | null;
   id_psicologo: number;
 }
