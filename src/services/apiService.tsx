@@ -1,7 +1,7 @@
 // src/services/apiService.ts
 import axios from "axios";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "https://backend-sanamente-d7ej.onrender.com",
   headers: {
     "Content-Type": "application/json",
@@ -132,7 +132,7 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         createdAt: publicacion.createdAt,
         nombre: item.usuario.nombre,
         imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-        autorId: item.usuario.id,
+        autorId: item.usuario_id,
       })),
     };
   } catch (error) {
