@@ -7,6 +7,7 @@ import { SesionesList } from '@/components/admin/sesionesList';
 import { ValoracionesList } from '@/components/admin/valoracionesList';
 import { UsuarioShow } from '@/components/admin/usuariosShow';
 import jsonServerProvider from 'ra-data-json-server'
+import { PsicologosShow } from '@/components/admin/psicologosShow';
 
 const dataProvider = jsonServerProvider('https://backend-sanamente-d7ej.onrender.com')
 
@@ -14,7 +15,7 @@ export default function AdminDashboard() {
 
   return (
     <Admin dataProvider={dataProvider}>
-  +   <Resource name="psicologos" list={PsicologoList} recordRepresentation={(record) => `#${record.usuario_id} ${record.usuario.nombre}`} />
+  +   <Resource name="psicologos" list={PsicologoList} recordRepresentation={(record) => `#${record.usuario_id} ${record.usuario.nombre}`} show={PsicologosShow} />
   +   <Resource name="publicaciones" list={PublicacionesList} show={ShowGuesser} />
   +   <Resource name="usuarios" list={UsuariosList} recordRepresentation={(record) => `#${record.id} ${record.nombre}`} show={UsuarioShow} />
   +   <Resource name="sesiones" list={SesionesList} show={ShowGuesser} />
