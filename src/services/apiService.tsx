@@ -328,8 +328,8 @@ export const createPost = async (autor_id: any, contenido: any) => {
 
 export const getComments = async (publicacion_id: any) => {
   try{
-    const response = await api.get(`/comentarios/obtener/${publicacion_id}`)
-    return response.data.comments
+    const response = await api.get(`/publicaciones/${publicacion_id}`)
+    return response.data.comentarios
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
