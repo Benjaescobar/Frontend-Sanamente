@@ -1,8 +1,6 @@
 "use client";
 import NavBar from "../components/navbar/NavBar";
 import Image from "next/image";
-import Link from "next/link";
-import { FiArrowRight } from "react-icons/fi";
 
 export default function Home() {
   return (
@@ -33,13 +31,6 @@ export default function Home() {
                 Consultas a tu manera 💻
               </p>
             </div>
-            <Link
-              href=""
-              className="inline-flex mt-10 ml-5 rounded-xl px-3 py-1 text-[#213554] bg-blue-200 hover:bg-blue-300"
-            >
-              Regístrate
-              <FiArrowRight className="m-1" /> {/* Icono de flecha */}
-            </Link>
           </div>
           <div className="w-1/3 flex justify-center items-center h-80">
             <Image
