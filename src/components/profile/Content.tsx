@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { getSessionsByPacientIdAndPsychologistId } from "@/services/apiService";
-import dayjs from "dayjs";
+
 
 interface ContentProps {
   nombre: string;
@@ -25,20 +24,7 @@ function Content({
   id_psicologo,
 }: ContentProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [hasSessionsWith, setHadSessionsWith] = useState(false);
   const [reportReason, setReportReason] = useState<string>("");
-
-  useEffect(() => {
-    const fetchSessions = async () => {
-      const myId = Number(localStorage.getItem("id"));
-      const sessions = await getSessionsByPacientIdAndPsychologistId(myId, id_psicologo);
-      const filteredSessions = sessions.filter((sesion: any) =>
-        dayjs(sesion.estado).isBefore(dayjs(new Date()))
-      );
-      setHadSessionsWith(filteredSessions.length > 0);
-    };
-    fetchSessions();
-  }, [id_psicologo]);
 
   const handleReportSubmit = () => {
     console.log(`Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`);
