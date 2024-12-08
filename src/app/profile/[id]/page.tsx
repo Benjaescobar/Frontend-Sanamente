@@ -10,7 +10,7 @@ import {
   getSessionsByPacientIdAndPsychologistId,
 } from "@/services/apiService";
 import ReviewCard from "@/components/profile/Review";
-import ProfessionalBlogPost from "@/components/feed/ProfessionalBlogPost";
+// import ProfessionalBlogPost from "@/components/feed/ProfessionalBlogPost";
 import { TherapistData } from "@/types/types";
 import BookingModal from "@/components/profile/BookingModal";
 import ReviewModal from "@/components/profile/ReviewModal";
@@ -135,6 +135,7 @@ export default function PsychologistProfile() {
   const sortedPublications = [...publicaciones].sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Reemplaza "createdAt" con el campo correcto
   });
+  
   const averageRating =
     valoraciones_recibidas.reduce((acc, review) => acc + review.puntuacion, 0) /
       valoraciones_recibidas.length || 0;
@@ -159,22 +160,19 @@ export default function PsychologistProfile() {
               <p>Este usuario aún no tiene ninguna valoración</p>
             )}
           </div>
-          <h1 className="text-xl font-bold mb-4 ml-10 mt-5">
+          {/* <h1 className="text-xl font-bold mb-4 ml-10 mt-5">
             Publicaciones de {therapist.nombre}
-          </h1>
-          <div className="min-w-3/4">
+          </h1> */}
+          {/* <div className="min-w-3/4">
             {sortedPublications.map((post, index) => (
               <ProfessionalBlogPost
-                id={0} // hardcodeado!!
-                autorId={String(id)}
-                redirect={false}
-                nombre={therapist.nombre}
                 key={index}
-                color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
+                redirect={true}
+                color={colorClass[index % 2]}
                 {...post}
               />
-            ))}
-          </div>
+            ))} */}
+          {/* </div> */}
         </div>
         <div className="flex-shrink-0 w-1/3">
           <div className="max-w-sm mx-auto p-4 bg-white rounded-lg">
