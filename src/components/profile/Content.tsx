@@ -3,13 +3,14 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-
 interface ContentProps {
   nombre: string;
   descripcion: string;
   especialidades: string;
   precio_min: number;
+  precio_max: number;
   experiencia: number;
+  ubicacion: string;
   foto: string | null;
   id_psicologo: number;
 }
@@ -19,12 +20,15 @@ function Content({
   descripcion,
   especialidades,
   precio_min,
+  precio_max,
   experiencia,
+  ubicacion,
   foto,
   id_psicologo,
 }: ContentProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportReason, setReportReason] = useState<string>("");
+
 
   const handleReportSubmit = () => {
     console.log(`Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`);
@@ -71,12 +75,22 @@ function Content({
           </div>
           <div className="grid grid-cols-4 gap-4 mt-6 text-center">
             <div>
-              <p className="font-bold text-sm text-gray-800">Precio</p>
-              <span className="font-normal text-gray-800">${precio_min}</span>
+              <p className="font-bold text-sm text-gray-800">
+                Rango de precios💰
+              </p>
+              <span className="font-normal text-gray-800">
+                ${precio_min} a ${precio_max}
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="font-bold text-sm text-gray-800">Ubicación📍</p>
+              <span className="font-normal text-gray-800">{ubicacion}</span>
             </div>
             <div>
-              <p className="font-bold text-sm text-gray-800">Años de experiencia</p>
-              <span className="font-normal text-gray-800">{experiencia}</span>
+              <p className="font-bold text-sm text-gray-800">Experiencia🧠</p>
+              <span className="font-normal text-gray-800">
+                {experiencia} años
+              </span>
             </div>
           </div>
         </div>

@@ -25,6 +25,10 @@ const StepForm = () => {
     "Terapia familiar",
     "Terapia de pareja",
     "Psicología infantil",
+    "Trastorno Obsesivo Compulsivo",
+    "Depresión",
+    "Dependencia emocional",
+    "Problemas de autoestima",
   ];
 
   useEffect(() => {
@@ -224,7 +228,7 @@ const StepForm = () => {
                 {selectedSpecialties.map((specialty, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-light text-blue-700 mr-2"
+                    className="inline-flex items-center rounded-full bg-blue-100 mt-4 px-3 py-1 text-sm font-light text-blue-700 mr-2"
                   >
                     {specialty}
                     <button
