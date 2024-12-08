@@ -10,13 +10,13 @@ import {
   getSessionsByPacientIdAndPsychologistId,
 } from "@/services/apiService";
 import ReviewCard from "@/components/profile/Review";
-// import ProfessionalBlogPost from "@/components/feed/ProfessionalBlogPost";
 import { TherapistData } from "@/types/types";
 import BookingModal from "@/components/profile/BookingModal";
 import ReviewModal from "@/components/profile/ReviewModal";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import SimplerProfessionalBlogPost from "@/components/feed/SimplerProfessionalBlogPost";
 
 export default function PsychologistProfile() {
   const params = useParams();
@@ -160,19 +160,23 @@ export default function PsychologistProfile() {
               <p>Este usuario aún no tiene ninguna valoración</p>
             )}
           </div>
-          {/* <h1 className="text-xl font-bold mb-4 ml-10 mt-5">
+          <h1 className="text-xl font-bold mb-4 ml-10 mt-5">
             Publicaciones de {therapist.nombre}
-          </h1> */}
-          {/* <div className="min-w-3/4">
+          </h1>
+          <div className="min-w-3/4">
             {sortedPublications.map((post, index) => (
-              <ProfessionalBlogPost
-                key={index}
-                redirect={true}
-                color={colorClass[index % 2]}
-                {...post}
-              />
-            ))} */}
-          {/* </div> */}
+              <SimplerProfessionalBlogPost
+              autorId={String(id)}
+              redirect={false}
+              content=""
+              nombre={therapist.nombre}
+              imageUrl="/images/foto.png"
+              timeSincePost=""
+              key={index}
+              color={index % 2 === 0 ? "bg-celeste" : "bg-amarillo"}
+              {...post}               />
+            ))}
+          </div>
         </div>
         <div className="flex-shrink-0 w-1/3">
           <div className="max-w-sm mx-auto p-4 bg-white rounded-lg">
