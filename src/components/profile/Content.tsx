@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { createReport } from "@/services/apiService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ContentProps {
   nombre: string;
@@ -32,13 +35,30 @@ function Content({
   const [reportReason, setReportReason] = useState<string>("");
   const [isMe, setIsMe] = useState(false);
 
-  const handleReportSubmit = () => {
-    console.log(
-      `Report submitted for psychologist ${id_psicologo} with reason: ${reportReason}`
-    );
-    setIsReportModalOpen(false);
-    setReportReason("");
-    // Aquí puedes agregar la lógica para enviar el reporte a la API.
+  const handleReportSubmit = async () => {
+    try {
+      await createReport(Number(id_psicologo), reportReason);
+      setIsReportModalOpen(false);
+      setReportReason("");
+      toast.success("Reporte enviado correctamente", {
+        position: "top-right",
+        autoClose: 3000, // Se cierra automáticamente después de 3 segundos
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (error) {
+      toast.error("Hubo un error al enviar el reporte, intente más tarde", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -54,6 +74,7 @@ function Content({
 
   return (
     <div className="mb-4 w-full max-w-4xl ml-10">
+      <ToastContainer />
       <div className="flex">
         <Image
           src={foto ? foto : "/images/default-profile.png"}

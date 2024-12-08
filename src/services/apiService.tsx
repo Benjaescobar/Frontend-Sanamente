@@ -362,6 +362,20 @@ export const createComments = async (publicacion_id: any, usuario_id: any, conte
   }
 }
 
+export const createReport = async (reported_id: any, motivo: any) => {
+  try{
+    const response = await api.post(`/reportes/crear`, {
+        reported_id,
+        motivo
+    });
+    return response.data
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error;
+  }
+}
+
+
 
 export interface Usuario {
   nombre: string;
