@@ -1,6 +1,11 @@
 "use client";
 
 import UserTable from "@/components/Admin/UserTable"; // Tabla de usuarios
+import PsicologosTable from "./PsicologoTable";
+import SesionesTable from "./SessionsTable";
+import PublicacionesTable from "./PostsTable";
+import ValoracionesTable from "./ReviewsTable";
+import ReportesTable from "./ReportesTable";
 // Importa otras tablas aquí según sea necesario, por ejemplo:
 // import PsicologosTable from "@/components/Admin/PsicologosTable";
 // import OrdersTable from "@/components/Admin/OrdersTable";
@@ -13,13 +18,12 @@ export default function EntityTable({ entityName }: EntityTableProps) {
   return (
     <div className="overflow-x-auto">
       {entityName === "users" && <UserTable />}
-      {entityName === "psicologos" && <p>Tabla de Psicólogos (Por implementar)</p>}
-      {entityName === "orders" && <p>Tabla de Órdenes (Por implementar)</p>}
+      {entityName === "psicologos" && <PsicologosTable></PsicologosTable>}
       {entityName === "comentarios" && <p>Tabla de Comentarios (Por implementar)</p>}
-      {entityName === "publicaciones" && <p>Tabla de Publicaciones (Por implementar)</p>}
-      {entityName === "sesiones" && <p>Tabla de Sesiones (Por implementar)</p>}
-      {entityName === "reportes" && <p>Tabla de Reportes (Por implementar)</p>}
-      {entityName === "valoraciones" && <p>Tabla de Valoraciones (Por implementar)</p>}
+      {entityName === "publicaciones" && <PublicacionesTable></PublicacionesTable> }
+      {entityName === "sesiones" && <SesionesTable></SesionesTable> }
+      {entityName === "reportes" && <ReportesTable></ReportesTable>}
+      {entityName === "valoraciones" && <ValoracionesTable></ValoracionesTable> }
       {![
         "users",
         "psicologos",

@@ -1,6 +1,6 @@
 "use client";
 
-import { getUsers } from "@/services/adminService";
+import { deleteUsers, getUsers } from "@/services/adminService";
 import { useEffect, useState } from "react";
 
 interface User {
@@ -27,6 +27,7 @@ export default function UserTable() {
 
   const handleDelete = (userId: number) => {
     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    deleteUsers(userId);
   };
 
   return (
