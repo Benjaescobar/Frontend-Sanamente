@@ -6,6 +6,7 @@ import SesionesTable from "./SessionsTable";
 import PublicacionesTable from "./PostsTable";
 import ValoracionesTable from "./ReviewsTable";
 import ReportesTable from "./ReportesTable";
+import CommentsTable from "./CommentsTable";
 // Importa otras tablas aquí según sea necesario, por ejemplo:
 // import PsicologosTable from "@/components/Admin/PsicologosTable";
 // import OrdersTable from "@/components/Admin/OrdersTable";
@@ -18,12 +19,14 @@ export default function EntityTable({ entityName }: EntityTableProps) {
   return (
     <div className="overflow-x-auto">
       {entityName === "users" && <UserTable />}
+
       {entityName === "psicologos" && <PsicologosTable></PsicologosTable>}
       {entityName === "comentarios" && <p>Tabla de Comentarios (Por implementar)</p>}
       {entityName === "publicaciones" && <PublicacionesTable></PublicacionesTable> }
       {entityName === "sesiones" && <SesionesTable></SesionesTable> }
       {entityName === "reportes" && <ReportesTable></ReportesTable>}
       {entityName === "valoraciones" && <ValoracionesTable></ValoracionesTable> }
+
       {![
         "users",
         "psicologos",
