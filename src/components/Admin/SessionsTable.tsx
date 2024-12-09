@@ -23,7 +23,7 @@ export default function SesionesTable() {
     fetchSesiones();
   }, []);
 
-  const handleDelete = async (idSesion: number, pacienteId: number) => {
+  const handleDelete = async (idSesion: number) => {
     try {
       await deleteSesion(idSesion);
       setSesiones((prevSesiones) =>
@@ -64,7 +64,7 @@ export default function SesionesTable() {
               </td>
               <td className="px-4 py-2 border-b text-center">
                 <button
-                  onClick={() => handleDelete(sesion.id, sesion.paciente_id)}
+                  onClick={() => handleDelete(sesion.id)}
                   className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                 >
                   Borrar

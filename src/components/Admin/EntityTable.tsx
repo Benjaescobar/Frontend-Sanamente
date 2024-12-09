@@ -21,7 +21,7 @@ export default function EntityTable({ entityName }: EntityTableProps) {
       {entityName === "users" && <UserTable />}
 
       {entityName === "psicologos" && <PsicologosTable></PsicologosTable>}
-      {entityName === "comentarios" && <p>Tabla de Comentarios (Por implementar)</p>}
+      {entityName === "comentarios" && <CommentsTable></CommentsTable>}
       {entityName === "publicaciones" && <PublicacionesTable></PublicacionesTable> }
       {entityName === "sesiones" && <SesionesTable></SesionesTable> }
       {entityName === "reportes" && <ReportesTable></ReportesTable>}

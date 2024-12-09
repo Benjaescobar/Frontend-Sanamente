@@ -15,9 +15,9 @@ export default function CommentsTable() {
 
   const handleDelete = (id: number, id_autor: number) => {
     deleteComment(id, id_autor).then((response) => 
-      console.log(`comentario ${id} eliminado exitosamente.`)  
+      console.log(`comentario ${id} eliminado exitosamente.`, response)  
     ).catch((err) => 
-      console.log('no se pudo eliminar el comentario.')  
+      console.log('no se pudo eliminar el comentario.', err)  
     )
   };
 
