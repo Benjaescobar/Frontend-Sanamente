@@ -564,3 +564,63 @@ describe("getTimeSlotsUsed", () => {
   });
 });
 
+
+describe("getTimeSlotsUsed", () => {
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("deberia obtener todas las sesiones ocupadas de un psicólogo en un día dado", async () => {
+    const mockApiResponse = {
+      data: [
+        {
+          "id": 1,
+          "paciente_id": 6,
+          "psicologo_id": 1,
+          "estado": "2024-12-06 14:00:00",
+          "tipo": "presencial",
+          "createdAt": "2024-12-05T22:33:51.763Z",
+          "updatedAt": "2024-12-05T22:33:51.763Z"
+        },
+        {
+          "id": 2,
+          "paciente_id": 6,
+          "psicologo_id": 1,
+          "estado": "2024-12-06 17:00:00",
+          "tipo": "presencial",
+          "createdAt": "2024-12-05T22:36:05.153Z",
+          "updatedAt": "2024-12-05T22:36:05.153Z"
+        }
+      ]      
+    };
+
+    (api.get as jest.Mock).mockResolvedValue(mockApiResponse);
+
+    const result = await getTimeSlotsUsed(1, '2024-12-06');
+
+    expect(api.get).toHaveBeenCalledWith('/sesiones/ocupadas/1/2024-12-06');
+    expect(api.get).toHaveBeenCalledTimes(1);
+
+    expect(result.length).toBeGreaterThanOrEqual(2);
+    expect(result).toContainEqual({
+      "id": 1,
+      "paciente_id": 6,
+      "psicologo_id": 1,
+      "estado": "2024-12-06 14:00:00",
+      "tipo": "presencial",
+      "createdAt": "2024-12-05T22:33:51.763Z",
+      "updatedAt": "2024-12-05T22:33:51.763Z"
+    });
+    expect(result).toContainEqual({
+      "id": 2,
+      "paciente_id": 6,
+      "psicologo_id": 1,
+      "estado": "2024-12-06 17:00:00",
+      "tipo": "presencial",
+      "createdAt": "2024-12-05T22:36:05.153Z",
+      "updatedAt": "2024-12-05T22:36:05.153Z"
+    })
+
+  });
+});
