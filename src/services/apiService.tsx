@@ -1,7 +1,7 @@
 // src/services/apiService.ts
 import axios from "axios";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "https://backend-sanamente-d7ej.onrender.com",
   headers: {
     "Content-Type": "application/json",
@@ -132,7 +132,7 @@ export const getTherapistById = async (id: string): Promise<TherapistData> => {
         createdAt: publicacion.createdAt,
         nombre: item.usuario.nombre,
         imageUrl: item.usuario.foto || "/images/default-profile.jpg",
-        autorId: item.usuario.id,
+        autorId: item.usuario_id,
       })),
     };
   } catch (error) {
@@ -373,6 +373,26 @@ export const createReport = async (reported_id: any, motivo: any) => {
   } catch (error) {
     console.error("Error posting data:", error);
     throw error;
+  }
+}
+
+export const getAllComments = async () => {
+  try {
+    const response = await api.get('/comentarios/')
+    return response.data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+export const deleteComment = async (id_comentario: any, id_usuario: any) => {
+  try {
+    const response = await api.delete(`/comentarios/${id_comentario}/${id_usuario}`)
+    return response.data
+  } catch (err) {
+    console.error(err)
+    throw err
   }
 }
 
