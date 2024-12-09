@@ -64,6 +64,7 @@ describe("getPosts", () => {
 
     expect(result).toEqual([
         {
+          id: 3,
           contenido: "No tengan miedo de buscar ayuda",
           createdAt: "2024-12-07T16:49:46.761Z",
           nombre: "Rodrigo Fuentes",
@@ -71,6 +72,7 @@ describe("getPosts", () => {
           autorId: 9,
         },
         {
+          id: 2,
           contenido: "Recuerden siempre tomar descansos",
           createdAt: "2024-12-07T16:42:14.694Z",
           nombre: "Rodrigo Fuentes",
@@ -78,6 +80,7 @@ describe("getPosts", () => {
           autorId: 9,
         },
         {
+          id: 1,
           contenido: "Probando esta funcionalidad",
           createdAt: "2024-12-07T16:18:59.827Z",
           nombre: "Rodrigo Fuentes",
@@ -333,6 +336,7 @@ describe("getTherapists", () => {
       ],
       publicaciones: [
         {
+          id: 4,
           contenido: "Probando esta funcionalidad",
           createdAt: "2024-12-07T16:18:59.827Z",
           nombre: "Rodrigo Fuentes",
@@ -340,6 +344,7 @@ describe("getTherapists", () => {
           autorId: 9
         },
         {
+          id: 5,
           contenido: "Recuerden siempre tomar descansos",
           createdAt: "2024-12-07T16:42:14.694Z",
           nombre: "Rodrigo Fuentes",
@@ -347,6 +352,7 @@ describe("getTherapists", () => {
           autorId: 9
         },
         {
+          id: 6,
           contenido: "No tengan miedo de buscar ayuda",
           createdAt: "2024-12-07T16:49:46.761Z",
           nombre: "Rodrigo Fuentes",
@@ -354,6 +360,7 @@ describe("getTherapists", () => {
           autorId: 9
         },
         {
+          id: 7,
           contenido: "Buenos Dias a Todos",
           createdAt: "2024-12-08T16:26:12.097Z",
           nombre: "Rodrigo Fuentes",
