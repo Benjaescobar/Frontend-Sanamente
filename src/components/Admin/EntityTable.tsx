@@ -1,6 +1,7 @@
 "use client";
 
 import UserTable from "@/components/Admin/UserTable"; // Tabla de usuarios
+import CommentsTable from "./CommentsTable";
 // Importa otras tablas aquí según sea necesario, por ejemplo:
 // import PsicologosTable from "@/components/Admin/PsicologosTable";
 // import OrdersTable from "@/components/Admin/OrdersTable";
@@ -15,7 +16,7 @@ export default function EntityTable({ entityName }: EntityTableProps) {
       {entityName === "users" && <UserTable />}
       {entityName === "psicologos" && <p>Tabla de Psicólogos (Por implementar)</p>}
       {entityName === "orders" && <p>Tabla de Órdenes (Por implementar)</p>}
-      {entityName === "comentarios" && <p>Tabla de Comentarios (Por implementar)</p>}
+      {entityName === "comentarios" && <CommentsTable />}
       {entityName === "publicaciones" && <p>Tabla de Publicaciones (Por implementar)</p>}
       {entityName === "sesiones" && <p>Tabla de Sesiones (Por implementar)</p>}
       {entityName === "reportes" && <p>Tabla de Reportes (Por implementar)</p>}
