@@ -19,7 +19,6 @@ export default function EntityTable({ entityName }: EntityTableProps) {
   return (
     <div className="overflow-x-auto">
       {entityName === "users" && <UserTable />}
-
       {entityName === "psicologos" && <PsicologosTable></PsicologosTable>}
       {entityName === "comentarios" && <CommentsTable></CommentsTable>}
       {entityName === "publicaciones" && <PublicacionesTable></PublicacionesTable> }
