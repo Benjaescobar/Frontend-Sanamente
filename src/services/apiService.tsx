@@ -376,6 +376,26 @@ export const createReport = async (reported_id: any, motivo: any) => {
   }
 }
 
+export const getAllComments = async () => {
+  try {
+    const response = await api.get('/comentarios/')
+    return response.data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+export const deleteComment = async (id_comentario: any, id_usuario: any) => {
+  try {
+    const response = await api.delete(`/comentarios/${id_comentario}/${id_usuario}`)
+    return response.data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
 
 
 export interface Usuario {
